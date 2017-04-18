@@ -12,7 +12,7 @@ for (ParameterValue p in params) {
     env[p.key] = p.value
 }
 
-node(label) {
+node(LABEL) {
     timestamps {
         stage('Checkout') {
             dir('root') {

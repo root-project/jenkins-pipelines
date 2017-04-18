@@ -38,7 +38,7 @@ class GenericBuild implements Serializable {
             jobParameters << parameter
         }
 
-        jobParameters << script.string(name: 'label', value: label)
+        jobParameters << script.string(name: 'LABEL', value: label)
         jobParameters << script.string(name: 'COMPILER', value: compiler)
         jobParameters << script.string(name: 'BUILDTYPE', value: buildType)
 
