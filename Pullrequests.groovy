@@ -9,7 +9,6 @@ properties([
         string(name: 'ghprbGhRepository', defaultValue: 'root/root'),
         string(name: 'ghprbCommentBody', defaultValue: '@phsft-bot build'),
         string(name: 'sha1', defaultValue: '48214f30056e120818ea73b9fadf7b72268bc7de'),
-        string(name: 'MODE', defaultValue: 'experimental'),
         string(name: 'VERSION', defaultValue: 'master', description: 'Branch to be built'),
         string(name: 'EXTERNALS', defaultValue: 'ROOT-latest', description: ''),
         string(name: 'EMPTY_BINARY', defaultValue: 'false', description: 'Boolean to empty the binary directory (i.e. to force a full re-build)'),
@@ -32,7 +31,7 @@ parser.configure(this, build)
 stage('Building') {
     build.build()
 
-    if (currentBuild.result == Result.SUCCESS) {
+    if (currentBuild.result == 'SUCCESS') {
         gitHub.setSucceedCommitStatus('Build passed', currentBuild)
     } else {
         gitHub.setFailedCommitStatus('Build failed', currentBuild)
