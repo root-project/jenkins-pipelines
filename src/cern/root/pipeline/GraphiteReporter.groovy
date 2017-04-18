@@ -10,6 +10,7 @@ import java.net.Socket
 import java.util.Collections
 
 import hudson.security.ACL
+import hudson.tasks.junit.TestResultAction
 import jenkins.metrics.impl.TimeInQueueAction
 import jenkins.model.Jenkins
 
@@ -80,13 +81,26 @@ class GraphiteReporter implements Serializable {
 
         reportMetric("build.${mode}.total_run_time", now, (long)(totalRunTime / 1000))
 
-        def action = build.getAction(TimeInQueueAction.class)
+        def action = build.getAction(TimeInQueueAction)
         if (action != null) {
             // Time it takes to actually build
             def buildTime = totalRunTime - action.getQueuingDurationMillis()
 
             reportMetric("build.${mode}.run_time", now, (long)(buildTime / 1000))
             reportMetric("build.${mode}.queue_time", now, (long)(action.getQueuingDurationMillis() / 1000))
+        }
+
+        def testResults = build.getAction(TestResultAction)
+
+        if (testResults != null) {
+            def failedCount = testResults.failCount
+            def skipCount = testResults.skipCount
+            def totalCount = testResults.totalCount
+            def passCount = totalCount - failedCount - skipCount
+
+            testResults.getFailedTests().each { result ->
+                String title = result.getFullName()
+            }
         }
     }
 }
