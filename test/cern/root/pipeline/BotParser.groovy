@@ -1,0 +1,1 @@
+../../../../src/cern/root/pipeline/BotParser.groovy

@@ -1,0 +1,536 @@
+<title>${project.name}</title>
+
+<STYLE>
+        body table, td, th, p, h1, h2, h3, h4, h5 {
+          margin:0;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+          background-color: #ffffff;
+          color: #333;
+        }
+        h1, h2 {
+          margin-bottom:10px;
+        }
+        h1 {
+          font-size: 19px;
+        }
+        h2 {
+          margin-bottom:5px;
+          margin-top:5px;
+          font: bold 100%;
+          font-size: 15px;
+        }
+        h5 {
+            margin: 0;
+        }
+        .bg2 {
+          color:black;
+          background-color:#E0E0E0;
+          font-size:110%
+        }
+        th {
+          font-weight: bold;
+        }
+        tr, td, th {
+          padding:2px;
+        }
+        td.test_passed {
+          color:blue;
+        }
+        td.test_failed {
+          color:red;
+        }
+        td.test_unstable {
+            color: #CC9933;
+        }
+        td.test_skipped {
+          color:grey;
+        }
+        .console {
+          font: normal normal 90% Courier New, monotype;
+          padding:0px;
+          margin:0px;
+        }
+        div.content, div.header {
+          background: #ffffff;
+          border: 1px solid #e3e3e3;
+          content: 2px;
+          padding: 15px;
+          border-radius: 4px;
+          box-shaddow: inset 0 1px 1px rgba(0,0,0,.05);
+          margin-bottom: 10px;
+          margin-top: 10px;
+        }
+        table.border, th.border, td.border {
+          border: 1px solid black;
+          border-collapse:collapse;
+        }
+        ul {
+          padding-left: 20px;
+        }
+        hr {
+          border: 0;
+          height: 1px;
+          background-color: #afafaf;
+        }
+</STYLE>
+<BODY>
+<%
+
+import hudson.Util
+import hudson.Functions
+import hudson.model.Action
+import hudson.model.Result
+import jenkins.model.Jenkins
+import hudson.plugins.emailext.plugins.content.ScriptContentBuildWrapper
+
+def healthIconSize = "16x16"
+def healthReports = project.buildHealthReports
+
+Integer total_builds = buildResults.size()
+Integer worst_error = 0
+
+final BUILD_TYPES = 5
+
+final BUILD_SUCCESS = 0
+final BUILD_UNSTABLE = 1
+final BUILD_FAILURE = 2
+final BUILD_NOT_BUILT = 3
+final BUILD_ABORTED = 4
+
+// Total amount of occurences per status.CC9933
+// See ordinal value for index (hudson.model.Result)
+Integer[] total_status = new Integer[BUILD_TYPES]
+
+Map<String,hudson.model.Result> toolchain_status = new HashMap<String,hudson.model.Result>()
+Map<String,Integer> toolchain_total_builds = new HashMap<String,Integer>()
+
+Map<String,Integer>[] toolchain_builds = new HashMap<String,Integer>[BUILD_TYPES]
+
+Map<String,hudson.model.Result> architecture_status = new HashMap<String,hudson.model.Result>()
+Map<String,Integer> architecture_total_builds = new HashMap<String,Integer>()
+Map<String,Integer>[] architecture_builds = new HashMap<String,Integer>[BUILD_TYPES]
+
+for (i = 0; i < BUILD_TYPES; i++) {
+    toolchain_builds[i] = new HashMap<String,Integer>()
+    architecture_builds[i] = new HashMap<String,Integer>()
+    total_status[i] = 0
+}
+
+// We want to initial all status maps to SUCCESS
+// We use runs to get actual matrix values because matrix_axis keeps a record of all 
+// matrix/values. So, if you remove things they can still show up there.
+
+buildResults.each { buildResult -> 
+    toolchain_total_builds.put(buildResult.compiler, 0)
+    architecture_total_builds.put(buildResult.label, 0)
+
+    for (i = 0; i < BUILD_TYPES; i++) {
+        toolchain_builds[i].put(buildResult.compiler, 0)
+        architecture_builds[i].put(buildResult.label, 0)
+        total_status[i] = 0
+    }
+}
+
+// OK, now run thru runs and set anything that did not succeed.
+buildResults.each { buildResult -> 
+    def run = buildResult.result.getRawBuild()
+    def toolchain = buildResult.compiler
+    def architecture = buildResult.label
+
+    def toolchainBuildCount = toolchain_total_builds.get(toolchain) + 1
+    toolchain_total_builds.put(toolchain, toolchainBuildCount)
+
+    def architectureBuildCount = architecture_total_builds.get(architecture) + 1
+    architecture_total_builds.put(architecture, architectureBuildCount)
+
+    total_status[run.getResult().ordinal]++
+
+    if (!toolchain_status.containsKey(toolchain) 
+            || toolchain_status.get(toolchain).ordinal < run.getResult().ordinal) {
+        toolchain_status.put(toolchain, run.getResult())
+    }
+
+    if (!architecture_status.containsKey(architecture) 
+            || architecture_status.get(architecture).ordinal < run.getResult().ordinal) {
+        architecture_status.put(architecture, run.getResult())
+    }
+
+    def toolchainCount = toolchain_builds[run.getResult().ordinal].get(toolchain) + 1
+    toolchain_builds[run.getResult().ordinal].put(toolchain, toolchainCount)
+ 
+    def architectureCount = architecture_builds[run.getResult().ordinal].get(architecture) + 1
+    architecture_builds[run.getResult().ordinal].put(architecture, architectureCount)
+
+    if (run.getResult().ordinal > worst_error) {
+        worst_error = run.getResult().ordinal
+    }
+}
+
+%>
+    <div class="header">
+      <!-- GENERAL INFO -->
+      <table>
+        <tr>
+          <td align="right">
+<%
+if (build.result == Result.SUCCESS) {
+%>
+<img src="data:image/gif;base64,R0lGODlhIAAgAPeUAFFvNlFyNlZ2O195SmB/RGN9TE6aBlCeBlafEVSkB1aoB1muCFy0CV+5CV2pFF2jG2G8CWKlIWmqLHGuOHWwPGTDCmfJC2nMC23TDHPdDXvcH3XiDXjnDnrsDn7yD3fhEnzLL2GARWSIRGWESWqLTG2MUm6DXXCPVHKPWW6RUXKUVHeaV3ieVnKRWHqbXHqzRH+2Sn6dYn2SbID2D4L2E4b2G4n3H4DFP4fYO4v3I473KZD3LY3pNpP3M5X4Npf4O5n4PoK4T4W4U4i+VI6+X4OcboWdcYaSfIGjYoOqYoembIqsa4eicIqkdI2scYuieJK0dJa8dZm/dZe3epm6eZjWXZz4RJ/4SKH4TaX5VKPxWaf5Wan5XJLAZpXCapjCb5rDc53De6DeZaTQeq75ZLH6a63hfbHpe7Pxd7X6c7j6d7n6eZaejpqri5yyiqO1k6u7nKerpLO8rLa4tbu7u57AgKXMgq/XirDdhLTiiLz1hr36grzyibbDqr/KtcL7isDwk8f7k8z8nM78ocTEw8zMzNLazNPT09zc3Nvh1t/k2uDl3OPj4+To4Ojs5ezt7O/y7fX19fj59/z8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUAAJQALAAAAAAgACAAAAj/ACkJHEiwoMGDCBMqXMiwoUOBkgy5SaGCBQkmfiA9LDjJzQo7efSU2ZLmzJglJTRubDTiThorQKz86KGjBg0eeEj0eQjHBaAsWLBkAWrFR00PH8RAKTGJYaIkaq5g4UKmDBkuWaz0yEGjAwYQYYwsnCSCD5CpZdSoTUMGC5AdNTxksHAjhiGFTfDEzFJmzZ8/e9aM1GrDw4YLDcCEkIRQUZIsPa5wKbMn0KBAe0Ze8ZHDMGIHdZ4gfGMmR+TJlQVhLsNls40ZhxsoIBICYQo0NnZYyUJGzR7Aagb3KHyYQQIKLZoaTKGFho4fV7aUSaMmzUi3NTvMZXDggRNFBiUh/+Exw7SV6GTSb8FCmAYHDBUWGDAwBY7BRVA0dKBhGsgVqf8BsVUN2llg3HxgFGHQJDHgkMF+OezQww9A/ODDDlzBBt8CB8w3xU4GkVAFBhl4QIMNOeSgQ4o20GAYfAcaEIESjRyEwhgVkMjBfjT06KJ28DWQwHwGvFACQnBQwQAEFpC4wY4cbJABBhdUwIACRBrgBQEIPULCEAswUMEFF2BgJpUVQLAAlkRGMMUbCcEBRQQJhNkABBA00AADa3aYZRgjLDRCHfMdoMChhw6Z5XxClOCIQpOwBAYCi1Y6HwxLtBGJcgs+wogcArgxgZ+WPhDGCTIgwkgkjHEUySOIHG5CSAFIeCEBqfNFEMQUAcRRyCGIPLKpQa8ygkghhLAhQAtORPFFF1JAEQMBJsxByK+MPNIqsZ7GiuwcbJgAQAADHBEHHdcCm+22B00iySPdHiJvIfTKq+4jkEjCKUPuSvIqvPCyOsm+GxVssMEBAQA7"/>
+<%
+} else if (build.result == Result.FAILURE) {
+%>
+<img src="data:image/gif;base64,R0lGODlhIAAgAPZdAI46OpQ9Pe8pKfAvL/AzM/E8PJ1HR5JOTp1LS5VeXqVPT6JUVKlVVaVaWq1bW5x8fKxkZKRtbbNmZrtra7Jzc7tzc7V5efJDQ/NMTPNSUvRbW8Vzc8x5edV/f/VkZPZsbPdzc/d6evh+fqSNjaiPj72Ojq6kpLm1tbu7u8uBgdyFhd2MjMOWlsednduVldSZmeODg+mGhuOLi+2Li/ODg/iFhfaNjfmMjPCRkfmTk/qbm8igoMOsrM2qqt6kpNCsrNO2tuSiou2jo+epqfWmpvqkpPusrPazs/yysvK4uPy6usTDw8zMzN7JydPT09zc3OLOzv3Dw/7NzefW1unb2//Y2OPj4+zh4ezs7PPq6vX19fr39/z8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUAAF0ALAAAAAAgACAAAAf/gF2Cg4SFhoeIiYqLjI2OgltNJQ0OEAsWQFmPhVwlEC9DR0U6RkIuFQuam1cIPkY5OTY2NSEgHyFCCj+POxJJOsDAsDUitho2KQ1cjFMVSDk6RUbToznEHx4ZHisUi1wIRzbRSErlSqM2NCAeGhgeE1CKFkE2OdJKUVJRSkZF1sYYCtAwsOwQlQrW7JGTUkWKEiT+boT40O5CARkWELEIEqKGwnwNo0C0NrFdAQIgDCBqQAQEDWhG8O3jp+MfxYADNDgoWKhBDhAibkQzQo7fqBvFsgUUUIDDFENbJkwEUUNcEWlXa9KimOECAQECYLQwRCWFBw+3atyAJuzGNXYB/78KiNGNkwSKHkB0VHvDLa11GroSGAAWRo9DCmpk0IBWbwgRIWphC4wTbIENVw5BwHEBgza0H0JjY9e1AGGwOhG1WFGg82INjNlRtngarAiVh7Iw+FCgNQbPGX5jsHgSrGUVLBK1SHFhQO/eF6L3lmtcwAwEixDMIDxgAIHvg6sb/8BAFSIuVxTQoC5evAcOJbTwLLQFixUeAWRkaF+9wAwHETxhBRZaGMKFFvY5scQBE9CAQW2WeaACACYw4cSA8hmCoBVOKEhCAA5wEAMNIcTQwQQIJHDCEhZiiMiGTzDBxBInjJAAAAAc8IAJKLDohIAEKsLFFlpYYcUTMcqo5BiPQGqxxXzeEKkFglhUOeWTm2Sp5ZaDBAIAOw=="/>
+
+<%
+} else {
+%>
+<img src="data:image/gif;base64,R0lGODlhIAAgAPZyAP+3OP67Pa+eQa2fU7SiQrOkVb2rUL+zVa2iY72ycsGvT8CvUcSyVsS2W8m2Xf+9Qv+/TMu2Y8e7Ycu5ZMy+atK9b/3DRfzHSPvKTP/BVPvPUfrTVfnWWPjbXsrAas/Bds7Ee9PEdNDEf9zGetbJe//GYv/KbPffYvjdYv3TbODIf//NdPvbdv/RfPfiZfbmavbobvfpc/nje/fqevjrfrCsj7Oypbu5pru6tbu7u97Ohs/GkdXOk9nQmuLMhenPjO3Qjf7ThvzVi/zdie7VkuXbmfrWkvncl/jshfntjPvikvnuk/rvmfrwnM7Kr9zUouHbsOPfuevjpO/nqvTkpfHppfjtp/rxpPvzrPbvuffws/v0svz1usPDw8nIxMzMzNPT09zc3Orny/33wv34xv75ze/t2PHu3P/72OPj4+3s4ezs7PTy4/b16vj37vX19fz79/39/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUAAHIALAAAAAAgACAAAAf/gHKCg4SFhoeIiYqLjI2OgnBiPBISHg0iUW2PhXE8FEVTW1dNVlVFJA1um3JsB1JYS0mySDQxMDNUDFCPTx5ZTUxNo01LtDEuKEo+DXGMZiGwwljTo8UzMC4cKUQgi3ELWknCW1zlW1ZNSUjHHRopIWKKIlJJS1dYXGRlY1xYV8UxXnTYcEGIAjiIzoRggsTeljFl0OwTFesaCg0XIBDZgaiHlBgNr5CLWIYLRSQzBBIM0GIBIglWQC5pgm8MmXJYiK0TiDFAiQnNDElYAoOGuHvkTF5hkqSWi3YWAjxQYcYQnA8yXsxAcvTKvVHqUp7ggMECAABAnhg6owOFi1tc/2cSi4USW7sLAc4a+WAoTgUWHd5u5ToLZcAOZM2eBbLLUIMhG1C8eBFjxgwalm0J5KAh6lkLI9gcknAEw4YOHSbDgDH5xQnEPc8CMOEA0RMiFjBo4ID6xAlkiDdgwJv3bBAFiNo4aJFb927OGjRgKFv8LIQfPRI98QEhgIUL08Nf8CwbQAAjLhUxMHI2gPsHD9yXl70iguhEcdQwEFJ9/vwUKuzwRlB9rZGGEwQQUYJ/5UFgRAQJhJHGGgQOEscba4QBhhcFhBBEBv0BkMEKQAhwwxdgTDigIRimAcYXXdRAQAQ+ACFEEED4UIEBCODQBYoqItKihjDiUAMCAggwQCwCNuTwIxgSrvGGInHEsYaBGoKh5RcoahklhRV6cyGGV175xoBhrqLmmo4EAgA7"/>
+<%
+}
+%>
+
+          </td>
+          <td valign="center">
+            <b style="font-size: 200%;">BUILD ${build.result}</b>
+          </td>
+        </tr>
+        <tr>
+          <td>Build URL</td>
+          <td>
+            <a href="${rooturl}${build.url}">${rooturl}${build.url}</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Project:</td>
+          <td>${project.name}</td>
+        </tr>
+        <tr>
+          <td>Date of build:</td>
+          <td>${it.timestampString}</td>
+        </tr>
+        <tr>
+          <td>Build duration:</td>
+          <td>${build.durationString}</td>
+        </tr>
+        <tr>
+          <td>Build cause:</td>
+          <td>
+<%
+
+        hudson.model.Cause firstCause = build.causes.get(0);
+        allCausesSame = false
+        for (hudson.model.Cause cause : build.causes) {
+            if (!cause.equals(firstCause.shortDescription)) {
+                allCausesSame = true
+            }
+        }
+
+        if (allCausesSame) {
+            %> ${firstCause.shortDescription} <%
+        } else {
+            for (hudson.model.Cause cause : build.causes) {
+                %> ${cause.shortDescription} <%
+            }
+        }
+%>
+          </td>
+        </tr>
+<%
+		if (build.description != null) {
+%>
+        		<tr>
+          		<td>Build description:</td>
+          		<td>${build.description}</td>
+        		</tr>
+<%
+		}
+%>
+        <tr>
+          <td>Total Builds:</td>
+          <td>
+		${total_builds}
+          </td>
+        </tr>
+<%
+    if (total_status[2] != 0) {
+  %>
+            <tr>
+      <td>FAILURES:</td>
+              <td>
+        ${total_status[2]} out of ${total_builds} builds FAILED!
+              </td>
+    </tr>
+  <%
+    }
+%>
+      </table>
+    </div>
+
+
+<!-- CHANGES TEMPLATE -->
+<div class="content">
+<%
+
+if (build.changeSets != null) {
+    boolean hadChanges = false
+%>
+	<h1><a href="${rooturl}${build.url}/changes">Changes</a></h1>
+<%
+    for (hudson.scm.ChangeLogSet cs : build.getChangeSets()) {
+        for (hudson.scm.ChangeLogSet.Entry entry : cs) {
+            hadChanges = true
+            commitUrlPrefix = 'https://github.com/root-project/root/commit/'
+            if (commitUrlPrefix != null) {
+    %>
+                <h2>${entry.msgAnnotated} (commit <a href="${commitUrlPrefix}/${entry.commitId}">${entry.commitId}</a>)</h2>
+    <%
+            } else {
+    %>
+                <h2>${entry.msgAnnotated} (commit ${entry.commitId})</h2>
+    <%
+            }
+    %>
+                <p>by <em>${entry.author}</em></p>
+                <table>
+    <%
+                for (hudson.scm.ChangeLogSet.AffectedFile p : entry.affectedFiles) {
+    %>
+                            <tr>
+                                <td width="10%"> ${p.editType.name}</td>
+                                <td>
+                                    <tt>${p.path}</tt>
+                                </td>
+                            </tr>
+    <%
+                }
+    %>
+                </table><hr/>
+    <%
+        }
+    }
+	if (hadChanges == false) {
+%>
+		<p>No Changes</p>
+<%
+    }
+}
+%>
+</div>
+
+<div class="content">
+<h1>Toolchain Summary</h1>
+<table>
+<%
+for (String toolchain : toolchain_status.keySet()) {
+    hudson.model.Result __result = toolchain_status.get(toolchain)
+
+    Integer _total_cnt = toolchain_total_builds.get(toolchain)
+    Integer _unstable_cnt = toolchain_builds[BUILD_UNSTABLE].get(toolchain)
+    Integer _failed_cnt = toolchain_builds[BUILD_FAILURE].get(toolchain)
+    Integer _not_built_cnt = toolchain_builds[BUILD_NOT_BUILT].get(toolchain)
+    Integer _aborted_cnt = toolchain_builds[BUILD_ABORTED].get(toolchain)
+
+    resultStyle = "test_passed"
+    if (__result == Result.FAILURE) { 
+        resultStyle = "test_failed" 
+    } else if (__result == Result.UNSTABLE) { 
+        resultStyle = "test_unstable"
+    }
+    
+    if (__result == Result.SUCCESS) {
+        %>
+        <TR><TD colspan="2" class="${resultStyle}">${toolchain} - OK</TD></TR>
+        <%
+    } else {
+        List<String> buildResultMessages = new LinkedList<String>()
+        if (_unstable_cnt > 0) { buildResultMessages.add("${_unstable_cnt}/${_total_cnt} unstable") }
+        if (_failed_cnt > 0) { buildResultMessages.add("${_failed_cnt}/${_total_cnt} failed") }
+        if (_not_built_cnt > 0) { buildResultMessages.add("${_not_built_cnt}/${_total_cnt} not built") }
+        if (_aborted_cnt > 0) { buildResultMessages.add("${_aborted_cnt}/${_total_cnt} aborted") }
+
+        %>
+        <TR><TD colspan="2" class="${resultStyle}">${toolchain} - ${__result}. 
+        ${buildResultMessages.toArray().join(", ")}
+        </TD></TR>
+        <%
+    } 
+}
+%>
+</table>
+</div>
+
+
+<div class="content">
+<h1>Architecture Summary</h1>
+<table>
+<%
+for (String architecture : architecture_status.keySet()) {
+    hudson.model.Result __result = architecture_status.get(architecture)
+
+    Integer _total_cnt = architecture_total_builds.get(architecture)
+    Integer _unstable_cnt = architecture_builds[BUILD_UNSTABLE].get(architecture)
+    Integer _failed_cnt = architecture_builds[BUILD_FAILURE].get(architecture)
+    Integer _not_built_cnt = architecture_builds[BUILD_NOT_BUILT].get(architecture)
+    Integer _aborted_cnt = architecture_builds[BUILD_ABORTED].get(architecture)
+
+    resultStyle = "test_passed"
+    if (__result == Result.FAILURE) { 
+        resultStyle = "test_failed" 
+    } else if (__result == Result.UNSTABLE) { 
+        resultStyle = "test_unstable"
+    }
+    
+
+    if (__result == Result.SUCCESS) {
+        %>
+        <TR><TD colspan="2" class="${resultStyle}">${architecture} - OK</TD></TR>
+        <%
+    } else {
+        List<String> buildResultMessages = new LinkedList<String>()
+        if (_unstable_cnt > 0) { buildResultMessages.add("${_unstable_cnt}/${_total_cnt} unstable") }
+        if (_failed_cnt > 0) { buildResultMessages.add("${_failed_cnt}/${_total_cnt} failed") }
+        if (_not_built_cnt > 0) { buildResultMessages.add("${_not_built_cnt}/${_total_cnt} not built") }
+        if (_aborted_cnt > 0) { buildResultMessages.add("${_aborted_cnt}/${_total_cnt} aborted") }
+
+        %>
+        <TR><TD colspan="2" class="${resultStyle}">${architecture} - ${__result}. 
+        ${buildResultMessages.toArray().join(", ")}
+        </TD></TR>
+        <%
+    } 
+}
+%>
+</table>
+<%
+buildResults.each { buildResult -> 
+    def run = buildResult.result.getRawBuild()
+    if (run.getResult() != Result.SUCCESS) {
+        url = run.getUrl()
+        toolchain = buildResult.compiler
+        architecture = buildResult.label
+
+        def toolchain_val = toolchain
+        %>
+        <div class="content">
+        <h1><a href="${rooturl}${url}console">${toolchain_val} - ${architecture} Build Details</a></h1>
+        <%
+
+            log_parser_class = Jenkins.getInstance().getPluginManager().uberClassLoader
+                    .loadClass("hudson.plugins.logparser.LogParserAction")
+            log_parser = run.getAction(log_parser_class.asSubclass(Action.class))
+            
+            if (log_parser != null) {
+                log_parser_result = log_parser.getResult()
+
+                total_warnings = log_parser_result.getTotalWarnings()
+                total_errors = log_parser_result.getTotalErrors()
+
+                if (total_errors > 0) {
+
+                    %>
+                    <h2>Errors (${total_errors})</h2>
+                    <ul>
+                    <%
+
+                    error_links_file = new File(log_parser_result.getErrorLinksFile())
+
+                    patternFont = ~/<font.*?>/
+                    patternLink = ~/target="content" href="/
+                    replaceLink = "href=\"${rooturl}${url}parsed_console/"
+            
+                    errors = error_links_file.readLines().grep { it.contains "href" }.collect { line ->
+                        line.replaceAll(patternFont, "").replaceAll(patternLink, replaceLink).minus("</font>").minus("/mnt") // TODO: fix this
+                    }
+
+                    for (String error : errors) { %> ${error} <% }
+
+                    %> </ul> <%
+                }
+
+                if (total_warnings > 0) {
+    
+                    %>
+                    <h2>Warnings (${total_warnings})</h2>
+                    <ul>
+                    <%
+
+                    warning_links_file = new File(log_parser_result.getWarningLinksFile())
+
+                    patternFont = ~/<font.*?>/
+                    patternLink = ~/target="content" href="/
+                    replaceLink = "href=\"${rooturl}${url}parsed_console/"
+            
+                    warnings = warning_links_file.readLines().grep { it.contains "href" }.collect { line ->
+                        line.replaceAll(patternFont, "").replaceAll(patternLink, replaceLink).minus("</font>").minus("/mnt" + run.getWorkspace().getRemote())
+                    }
+
+                    for (String warning : warnings) { %> ${warning} <% }
+
+                    %>
+                    </ul>
+                    <%
+                }
+
+            } %>
+            <% 
+            
+            def buildWrapper = new ScriptContentBuildWrapper(run)
+            def test_results = buildWrapper.getAction("hudson.tasks.junit.TestResultAction")
+
+            if (test_results != null && test_results.getFailCount() > 0) {
+                failed_tests = test_results.getFailCount()
+                %>
+                <h2>Failed tests (${failed_tests})</h2>
+                <table>
+                    <tr>
+                        <th>Class</th>
+                        <th>Duration</th>
+                        <th>Age</th>
+                    </tr>
+                <% 
+                test_results.getFailedTests().each { result ->
+                    String title = result.getFullName()
+                    int age = 0
+                    if (result.getFailedSinceRun() != null) {
+                        age = run.number - result.getFailedSinceRun().number
+                    }
+
+                    float duration = result.getDuration()
+                    
+                    String locationBuilder = rooturl + url + "testReport/"
+                    String[] titleParts = title.split("\\.")
+
+                    if (titleParts.length > 3) {
+                        for (i = 0; i < titleParts.length - 2; i++) {
+                            locationBuilder += titleParts[i]
+
+                            if (i < titleParts.length - 3) {
+                                locationBuilder += "."
+                            }
+                        }
+
+                        locationBuilder += "/" + titleParts[titleParts.length - 2]
+                        locationBuilder += "/" + titleParts[titleParts.length - 1]
+                    }
+
+                    %>
+                    <tr>
+                        <td><a href="${locationBuilder}">${title}</a></td>
+                        <td>${String.format("%.1f", duration)} sec</td>
+                        <td>${age}</td>
+                    </tr>
+                    <%
+                }
+                %>
+                </table>
+                <%
+            }
+        %>
+        </div>
+        <%
+    }
+}
+
+%>
+
+</BODY>
