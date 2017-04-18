@@ -25,9 +25,9 @@ private def buildTestSummary(result) {
 
     def action = result.getRawBuild().getAction(AbstractTestResultAction.class)
     if (action != null) {
-        int total = action.getTotalCount()
-        int failed = action.getFailCount()
-        int skipped = action.getSkipCount()
+        def total = action.getTotalCount()
+        def failed = action.getFailCount()
+        def skipped = action.getSkipCount()
         summary.append('\nTest Status:\n')
         summary.append("\tPassed: ${(total - failed - skipped)}")
         summary.append(", Failed: $failed")
