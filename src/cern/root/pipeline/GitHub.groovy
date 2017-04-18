@@ -44,4 +44,3 @@ class GitHub implements Serializable {
         prbTrigger.getRepository().addComment(Integer.valueOf(prId), comment)
     }
 }
-
