@@ -17,7 +17,7 @@ properties([
 GenericBuild build = new GenericBuild(this)
 
 stage('Configuring') {
-    node {
+    node('master') {
         git url: 'https://github.com/root-project/root.git', branch: 'master'
     }
 
