@@ -9,11 +9,13 @@ node(label) {
     timestamps {
         stage('Checkout') {
             dir('root') {
-                git url: 'https://github.com/root-project/root.git', branch: params.VERSION
+                // TODO: Use the git step when it has implemented specifying refspecs
+                checkout([$class: 'GitSCM', branches: [[name: ROOT_BRANCH]], doGenerateSubmoduleConfigurations: false, extensions: [],
+                        submoduleCfg: [], userRemoteConfigs: [[refspec: ROOT_REFSPEC, url: 'https://github.com/root-project/root.git']]])
             }
 
             dir('roottest') {
-                git url: 'https://github.com/root-project/roottest.git', branch: params.VERSION
+                git url: 'https://github.com/root-project/roottest.git', branch: ROOTTEST_BRANCH
             }
 
             dir('rootspi') {

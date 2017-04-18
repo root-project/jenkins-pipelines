@@ -8,20 +8,25 @@ properties([
         string(name: 'ghprbPullId', defaultValue: '1'),
         string(name: 'ghprbGhRepository', defaultValue: 'root/root'),
         string(name: 'ghprbCommentBody', defaultValue: '@phsft-bot build'),
+        string(name: 'ghprbTargetBranch', defaultValue: 'master'),
         string(name: 'sha1', defaultValue: '48214f30056e120818ea73b9fadf7b72268bc7de'),
         string(name: 'VERSION', defaultValue: 'master', description: 'Branch to be built'),
         string(name: 'EXTERNALS', defaultValue: 'ROOT-latest', description: ''),
         string(name: 'EMPTY_BINARY', defaultValue: 'false', description: 'Boolean to empty the binary directory (i.e. to force a full re-build)'),
         string(name: 'ExtraCMakeOptions', defaultValue: '-Dvc=OFF -Dimt=OFF -Dccache=ON', description: 'Additional CMake configuration options of the form "-Doption1=value1 -Doption2=value2"'),
-        string(name: 'MODE', defaultValue: 'experimental', description: 'The build mode')
+        string(name: 'MODE', defaultValue: 'experimental', description: 'The build mode'),
     ])
 ])
 
-GitHub gitHub = new GitHub(this, 'Regular PR', params.ghprbGhRepository, ghprbPullId, params.sha1)
+GitHub gitHub = new GitHub(this, 'Regular PR', ghprbGhRepository, ghprbPullId, sha1)
 BotParser parser = new BotParser(this, gitHub, params.ExtraCMakeOptions)
 GenericBuild build = new GenericBuild(this)
 
-if (parser.isParsableComment(params.ghprbCommentBody.trim())) {
+build.addBuildParameter('ROOT_REFSPEC', '+refs/pull/*:refs/remotes/origin/pr/*')
+build.addBuildParameter('ROOT_BRANCH', "origin/pr/${ghprbPullId}/merge")
+build.addBuildParameter('ROOTTEST_BRANCH', "${params.ghprbTargetBranch}")
+
+if (parser.isParsableComment(ghprbCommentBody.trim())) {
     parser.parse()
 }
 

@@ -4,7 +4,7 @@ import hudson.model.Result
 import hudson.plugins.emailext.plugins.content.ScriptContentBuildWrapper
 import java.io.DataOutputStream
 import java.net.Socket
-import jenkins.metrics.impl.TimeInQueueAction;
+import jenkins.metrics.impl.TimeInQueueAction
 import jenkins.model.Jenkins
 
 class GenericBuild implements Serializable {
@@ -14,25 +14,35 @@ class GenericBuild implements Serializable {
     private def script
     private def mode
     private def graphiteReporter
+    private def buildParameters = []
 
     GenericBuild(script) {
         this.script = script
         this.mode = script.params.MODE
         this.graphiteReporter = new GraphiteReporter(script, mode)
+
+        for (ParameterValue p in script.currentBuild.rawBuild.getAction(ParametersAction.class)) {
+           addBuildParameter(p.name, String.valueOf(p.value))
+        }
+
+        // Always build the same branch on root and roottest
+        addBuildParameter('ROOT_BRANCH', script.params.VERSION)
+        addBuildParameter('ROOTTEST_BRANCH', script.params.VERSION)
     }
 
     private def performBuild(label, compiler, buildType) {
-        def buildParameters = []
+        def jobParameters = []
 
-        for (ParameterValue p in script.currentBuild.rawBuild.getAction(ParametersAction.class)) {
-            buildParameters << script.string(name: p.name, value: String.valueOf(p.value))
+        // Copy parameters from build parameters
+        for (parameter in buildParameters) {
+            jobParameters << parameter
         }
 
-        buildParameters << script.string(name: 'label', value: label)
-        buildParameters << script.string(name: 'COMPILER', value: compiler)
-        buildParameters << script.string(name: 'BUILDTYPE', value: buildType)
+        jobParameters << script.string(name: 'label', value: label)
+        jobParameters << script.string(name: 'COMPILER', value: compiler)
+        jobParameters << script.string(name: 'BUILDTYPE', value: buildType)
 
-        def result = script.build job: 'ROOT-generic-build', parameters: buildParameters, propagate: false
+        def result = script.build job: 'ROOT-generic-build', parameters: jobParameters, propagate: false
         def resultWrapper = [result: result, label: label, compiler: compiler, buildType: buildType]
         buildResults << resultWrapper
 
@@ -70,6 +80,11 @@ class GenericBuild implements Serializable {
 
     void afterBuild(postStep) {
         postBuildSteps << postStep
+    }
+
+    @NonCPS
+    void addBuildParameter(key, value) {
+        buildParameters << script.string(name: key, value: String.valueOf(value))
     }
 
     @NonCPS
