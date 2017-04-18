@@ -4,7 +4,7 @@
 import cern.root.pipeline.*
 
 properties([
-    pipelineTriggers([githubPush()]),
+    pipelineTriggers([githubPush(), pollSCM('H/10 * * * *')]),
     parameters([
         string(name: 'VERSION', defaultValue: 'master', description: 'Branch to be built'),
         string(name: 'EXTERNALS', defaultValue: 'ROOT-latest', description: ''),
