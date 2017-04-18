@@ -1,5 +1,12 @@
 #!groovy
 
+properties([
+    parameters([
+        string(name: 'ROOT_REFSPEC', defaultValue: '', description: 'Refspec for ROOT repository'),
+    ])
+])
+
+
 // Treat parameters as environment variables
 for (ParameterValue p in params) {
     env[p.key] = p.value
