@@ -15,12 +15,19 @@ properties([
 ])
 
 GenericBuild build = new GenericBuild(this)
-build.addConfigurations(BuildConfiguration.incrementalConfiguration)
 
-def mattermost = new Mattermost()
-build.afterBuild({ finishedBuild ->
-    mattermost.postMattermostReport(finishedBuild)
-})
+stage('Configuring') {
+    node {
+        git url: 'https://github.com/root-project/root.git', branch: 'master'
+    }
+
+    build.addConfigurations(BuildConfiguration.incrementalConfiguration)
+
+    def mattermost = new Mattermost()
+    build.afterBuild({ finishedBuild ->
+        mattermost.postMattermostReport(finishedBuild)
+    })
+}
 
 stage('Building') {
     build.build()
