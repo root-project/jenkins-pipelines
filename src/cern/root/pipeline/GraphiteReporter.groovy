@@ -103,7 +103,10 @@ class GraphiteReporter implements Serializable {
             if (platform != null) {
                 def buildName = "${script.VERSION}-$platform"
 
-                reportMetrics("${buildName}.testresult", [totalTestCount, passedTests.size(), skippedTests.size(), failedTests.size()])
+                reportMetrics("${buildName}.testresult.total", [totalTestCount])
+                reportMetrics("${buildName}.testresult.passed", [passedTests.size()])
+                reportMetrics("${buildName}.testresult.skipped", [skippedTests.size()])
+                reportMetrics("${buildName}.testresult.failed", [failedTests.size()])
 
                 passedTests.each { test ->
                     def title = test.getFullName().replace('.', '-')
