@@ -109,17 +109,17 @@ class GraphiteReporter implements Serializable {
                 reportMetrics("${buildName}.testresult.skipped", [skippedTests.size()])
                 reportMetrics("${buildName}.testresult.failed", [failedTests.size()])
 
-                passedTests.each { test ->
+                for (test in passedTests) {
                     def title = test.getFullName().replace('.', '-')
                     reportMetrics("${buildName}.tests.${title}", [0])
                 }
 
-                skippedTests.each { test ->
+                for (test in skippedTests) {
                     def title = test.getFullName().replace('.', '-')
                     reportMetrics("${buildName}.tests.${title}", [1])
                 }
 
-                failedTests.each { test ->
+                for (test in failedTests) {
                     def title = test.getFullName().replace('.', '-')
                     reportMetrics("${buildName}.tests.${title}", [2])
                 }
