@@ -104,24 +104,24 @@ class GraphiteReporter implements Serializable {
             if (platform != null) {
                 def buildName = "${script.VERSION}-$platform"
 
-                reportMetrics("${buildName}.testresult.total", [totalTestCount])
-                reportMetrics("${buildName}.testresult.passed", [passedTests.size()])
-                reportMetrics("${buildName}.testresult.skipped", [skippedTests.size()])
-                reportMetrics("${buildName}.testresult.failed", [failedTests.size()])
+                reportMetrics("${buildName}.testresult.total", [now, totalTestCount])
+                reportMetrics("${buildName}.testresult.passed", [now, passedTests.size()])
+                reportMetrics("${buildName}.testresult.skipped", [now, skippedTests.size()])
+                reportMetrics("${buildName}.testresult.failed", [now, failedTests.size()])
 
                 for (test in passedTests) {
                     def title = test.getFullName().replace('.', '-')
-                    reportMetrics("${buildName}.tests.${title}", [0])
+                    reportMetrics("${buildName}.tests.${title}", [now, 0])
                 }
 
                 for (test in skippedTests) {
                     def title = test.getFullName().replace('.', '-')
-                    reportMetrics("${buildName}.tests.${title}", [1])
+                    reportMetrics("${buildName}.tests.${title}", [now, 1])
                 }
 
                 for (test in failedTests) {
                     def title = test.getFullName().replace('.', '-')
-                    reportMetrics("${buildName}.tests.${title}", [2])
+                    reportMetrics("${buildName}.tests.${title}", [now, 2])
                 }
             }
         }
