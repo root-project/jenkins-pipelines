@@ -3,6 +3,10 @@ package cern.root.pipeline
 import hudson.tasks.test.AbstractTestResultAction
 import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
 
+/**
+ * Sends a status message to Mattermost generated from the build.
+ * @param buildWrapper Build wrapper.
+ */
 void postMattermostReport(buildWrapper) {
     def result = buildWrapper.result
     def lastBuildFailed = !hudson.model.Result.SUCCESS.equals(currentBuild.rawBuild.getPreviousBuild()?.getResult())

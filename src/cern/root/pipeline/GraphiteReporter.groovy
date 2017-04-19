@@ -13,13 +13,25 @@ import hudson.security.ACL
 import jenkins.metrics.impl.TimeInQueueAction
 import jenkins.model.Jenkins
 
+/**
+ * Reports build statistics to Graphite.
+ */
 class GraphiteReporter implements Serializable {
     private String graphiteServer
     private int graphiteServerPort
     private String graphiteMetricPath
     private def script
     private def mode
-    
+
+    /**
+     * Creates a new GraphiteReporter.
+     * The server configuration is read as secrets from Jenkins (secret text):
+     *      graphite-server: Server hostname of the Graphite server.
+     *      graphite-server-port: Server port of the Graphite server.
+     *      graphite-metric-path: Metric path to send metrics to.
+     * @param script Script context.
+     * @param mode The build mode, e.g. continuous or experimental.
+     */
     GraphiteReporter(script, mode) {
         this.script = script
         this.mode = mode
@@ -57,6 +69,10 @@ class GraphiteReporter implements Serializable {
         script.println("Posting graphite data: " + payload)
     }
 
+    /**
+     * Reports a build and its statistics to Graphite.
+     * @param build Build to report.
+     */
     def reportBuild(build) {
         def now = (long)(System.currentTimeMillis() / 1000)
         def totalRunTime = System.currentTimeMillis() - build.getTimeInMillis()

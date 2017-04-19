@@ -19,7 +19,7 @@ properties([
 ])
 
 GitHub gitHub = new GitHub(this, 'Regular PR', ghprbGhRepository, ghprbPullId, sha1)
-BotParser parser = new BotParser(this, gitHub, params.ExtraCMakeOptions)
+BotParser parser = new BotParser(this, params.ExtraCMakeOptions)
 GenericBuild build = new GenericBuild(this)
 
 build.addBuildParameter('ROOT_REFSPEC', '+refs/pull/*:refs/remotes/origin/pr/*')
@@ -30,16 +30,16 @@ if (parser.isParsableComment(ghprbCommentBody.trim())) {
     parser.parse()
 }
 
-parser.postStatusComment()
-parser.configure(this, build)
+parser.postStatusComment(gitHub)
+parser.configure(build)
 
 stage('Building') {
     build.build()
 
     if (currentBuild.result == 'SUCCESS') {
-        gitHub.setSucceedCommitStatus('Build passed', currentBuild)
+        gitHub.setSucceedCommitStatus('Build passed')
     } else {
-        gitHub.setFailedCommitStatus('Build failed', currentBuild)
+        gitHub.setFailedCommitStatus('Build failed')
     }
 }
 

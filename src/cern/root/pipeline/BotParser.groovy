@@ -3,23 +3,49 @@ package cern.root.pipeline
 import java.util.regex.Pattern
 import cern.root.pipeline.BuildConfiguration
 
+/**
+ * Handles parsing of build configurations from a user-specified command.
+ * This command could for example be a comment that is posted on GitHub.
+ */
 class BotParser implements Serializable {
-    private GitHub gitHub
     private boolean parsableComment
     private String matrix
     private String flags
     private static final String COMMENT_REGEX = 'build ((?<overrideDefaultConfiguration>just|also) on (?<matrix>([a-z0-9_]*\\/[a-z0-9_]*,?\\s?)*))?(with flags (?<flags>.*))?'
     private def script
 
+    /**
+     * Whether the default configuration for the job should be discarded.
+     */
     boolean overrideDefaultConfiguration
+
+    /**
+     * List of the build configurations that was not recognized.
+     */
     def invalidBuildConfigurations = []
+
+    /**
+     * List of the recognized build configurations.
+     */
     def validBuildConfigurations = []
+
+    /**
+     * The original/default ExtraCMakeOptions value from the original build.
+     */
     String defaultExtraCMakeOptions
+
+    /**
+     * CMake options to use for this build.
+     */
     String extraCMakeOptions
 
-    BotParser(script, gitHub, defaultExtraCMakeOptions) {
+    /**
+     * Initiates a new BotParser
+     * @param script Pipeline script context.
+     * @param defaultExtraCMakeOptions The default CMake options to use if user didn't specify anything.
+     */
+    BotParser(script, defaultExtraCMakeOptions) {
         this.script = script
-        this.gitHub = gitHub
         this.defaultExtraCMakeOptions = defaultExtraCMakeOptions
     }
 
@@ -38,6 +64,12 @@ class BotParser implements Serializable {
         }
     }
 
+    /**
+     * Checks if a comment is recognized as a comment or not. If it was, it will also pull out the recognized bits from
+     * the comment. It will however, not parse the job configuration.
+     * @param comment Comment to check.
+     * @return True if is parsable, otherwise false.
+     */
     @NonCPS
     boolean isParsableComment(comment) {
         def matcher = Pattern.compile(COMMENT_REGEX).matcher(comment)
@@ -53,6 +85,9 @@ class BotParser implements Serializable {
         return parsableComment
     }
 
+    /**
+     * Parses and sets the build configuration based on the comment set in isParsableComment.
+     */
     void parse() {
         script.println 'Comment recognized as a parseable command'
 
@@ -90,7 +125,11 @@ class BotParser implements Serializable {
         script.println "CMake flags: $flags"
     }
 
-    void postStatusComment() {
+    /**
+     * Posts a comment to GitHub about what configuration will be used.
+     * @param gitHub GitHub.
+     */
+    void postStatusComment(gitHub) {
         // If someone posted a platform/compiler that isn't recognized, abort the build.
         if (invalidBuildConfigurations.size() > 0) {
             def unrecognizedPlatforms = new StringBuilder()
@@ -128,7 +167,12 @@ class BotParser implements Serializable {
         }
     }
 
-    void configure(script, build) {
+    /**
+     * Configures a build to use the configuration that has been parsed.
+     * @param script Script context.
+     * @param build Build to configure.
+     */
+    void configure(build) {
         validBuildConfigurations.each { config ->
             build.buildOn(config.platform, config.compiler, 'Debug')
         }

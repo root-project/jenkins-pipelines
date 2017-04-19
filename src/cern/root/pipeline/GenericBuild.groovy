@@ -7,6 +7,9 @@ import java.net.Socket
 import jenkins.metrics.impl.TimeInQueueAction
 import jenkins.model.Jenkins
 
+/**
+ * Class for setting up a generic build of ROOT across a number of platforms.
+ */
 class GenericBuild implements Serializable {
     private def configuration = [:]
     private def buildResults = []
@@ -16,6 +19,10 @@ class GenericBuild implements Serializable {
     private def graphiteReporter
     private def buildParameters = []
 
+    /**
+     * Creates a new generic build.
+     * @param script Script context.
+     */
     GenericBuild(script) {
         this.script = script
         this.mode = script.params.MODE
@@ -58,18 +65,31 @@ class GenericBuild implements Serializable {
         graphiteReporter.reportBuild(result.rawBuild)
     }
 
+    /**
+     * Adds a configuration that ROOT should be built on.
+     * @param label Label to build on, e.g. slc6.
+     * @param compiler Compiler to build on, e.g. gcc62.
+     * @param buildType Build type, e.g. Debug.
+     */
     void buildOn(label, compiler, buildType) {
         script.println "Preparing build on $label"
         def configurationLabel = "$label-$compiler-$buildType"
         configuration[configurationLabel] = { performBuild(label, compiler, buildType) }
     }
 
+    /**
+     * Adds a set of pre-defined configurations.
+     * @param configs Configurations to add.
+     */
     void addConfigurations(configs) {
         configs.each { config -> 
             buildOn(config.label, config.compiler, config.buildType)
         }
     }
 
+    /**
+     * Starts the build.
+     */
     void build() {
         script.parallel(configuration)
 
@@ -78,15 +98,28 @@ class GenericBuild implements Serializable {
         }
     }
 
+    /**
+     * Adds a post-build step that will be executed after each build.
+     * @param postStep Closure that will execute after the build.
+     */
     void afterBuild(postStep) {
         postBuildSteps << postStep
     }
 
+    /**
+     * Adds a build parameter to the build.
+     * @param key Name of the build parameter.
+     * @param value Value of the build parameter.
+     */
     @NonCPS
     void addBuildParameter(key, value) {
         buildParameters << script.string(name: key, value: String.valueOf(value))
     }
 
+    /**
+     * Sends an email report about the current build to a set of participants.
+     * The email is generated from the template in resources/jenkins-pipeline-email-html.template.
+     */
     @NonCPS
     void sendEmails() {
         def binding = ['build': script.currentBuild.rawBuild, 
