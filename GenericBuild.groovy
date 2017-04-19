@@ -12,6 +12,8 @@ for (ParameterValue p in params) {
     env[p.key] = p.value
 }
 
+currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL")
+
 node(LABEL) {
     timestamps {
         stage('Checkout') {
