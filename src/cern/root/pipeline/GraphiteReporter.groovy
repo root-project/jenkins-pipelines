@@ -134,6 +134,7 @@ class GraphiteReporter implements Serializable {
         def pattern = Pattern.compile('\\+*\\sPLATFORM=(?<platform>.*)')
         
         build.logReader.withReader {
+            def line = null
             while (line = it.readLine()) {
                 def matcher = pattern.matcher(line)
                 if (matcher.find()) {
