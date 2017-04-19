@@ -144,7 +144,7 @@ class GraphiteReporter implements Serializable {
         }
 
         if (platform == null) {
-            println 'WARNING: No platform was found for this build. Did jenkins/getPlatform.py get executed?'
+            script.println 'WARNING: No platform was found for this build. Did jenkins/getPlatform.py get executed?'
         }
         
         return platform
