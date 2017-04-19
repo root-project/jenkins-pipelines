@@ -25,7 +25,7 @@ stage('Configuring') {
 
     def mattermost = new Mattermost()
     build.afterBuild({ finishedBuild ->
-        mattermost.postMattermostReport(finishedBuild)
+       // mattermost.postMattermostReport(finishedBuild)
     })
 }
 
