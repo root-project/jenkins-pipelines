@@ -135,7 +135,7 @@ class GraphiteReporter implements Serializable {
         
         build.logReader.withReader {
             def line = null
-            while (line = it.readLine()) {
+            while ((line = it.readLine()) != null) {
                 def matcher = pattern.matcher(line)
                 if (matcher.find()) {
                     platform = matcher.group('platform')
