@@ -58,11 +58,11 @@ class GraphiteReporter implements Serializable {
     }
     
     @NonCPS
-    private def reportMetric(metricName, x, y) {
+    private def reportMetrics(metricName, metrics) {
         def connection = new Socket(graphiteServer, graphiteServerPort)
         def stream = new DataOutputStream(connection.getOutputStream())
         def metricPath = "${graphiteMetricPath}.${metricName}"
-        def payload = "${metricPath} ${y} ${x}\n"
+        def payload = "${metricPath} ${metrics.join(' ')}\n"
 
         stream.writeBytes(payload)
         connection.close()
@@ -79,28 +79,69 @@ class GraphiteReporter implements Serializable {
         def totalRunTime = System.currentTimeMillis() - build.getTimeInMillis()
         script.println("Total build time: " + totalRunTime)
 
-        reportMetric("build.${mode}.total_run_time", now, (long)(totalRunTime / 1000))
+        reportMetrics("build.${mode}.total_run_time", [now, (long)(totalRunTime / 1000)])
 
         def action = build.getAction(TimeInQueueAction)
         if (action != null) {
             // Time it takes to actually build
             def buildTime = totalRunTime - action.getQueuingDurationMillis()
 
-            reportMetric("build.${mode}.run_time", now, (long)(buildTime / 1000))
-            reportMetric("build.${mode}.queue_time", now, (long)(action.getQueuingDurationMillis() / 1000))
+            reportMetrics("build.${mode}.run_time", [now, (long)(buildTime / 1000)])
+            reportMetrics("build.${mode}.queue_time", [now, (long)(action.getQueuingDurationMillis() / 1000)])
         }
 
         def testResults = build.getAction(TestResultAction)
 
         if (testResults != null) {
-            def failedCount = testResults.failCount
-            def skipCount = testResults.skipCount
-            def totalCount = testResults.totalCount
-            def passCount = totalCount - failedCount - skipCount
+            def failedTests = testResults.result.failedTests
+            def skippedTests = testResults.result.skippedTests
+            def passedTests = testResults.result.passedTests
 
-            testResults.getFailedTests().each { result ->
-                String title = result.getFullName()
+            def totalTestCount = failedTests.size() + skippedTests.size() + passedTests.size()
+
+            def platform = getPlatform(build)
+            if (platform != null) {
+                def buildName = "${script.VERSION}-$platform"
+
+                reportMetrics("${buildName}.testresult", [totalTestCount, passedTests.size(), skippedTests.size(), failedTests.size()])
+
+                passedTests.each { test ->
+                    def title = test.getFullName().replace('.', '-')
+                    reportMetrics("${buildName}.tests.${title}", [0])
+                }
+
+                skippedTests.each { test ->
+                    def title = test.getFullName().replace('.', '-')
+                    reportMetrics("${buildName}.tests.${title}", [1])
+                }
+
+                failedTests.each { test ->
+                    def title = test.getFullName().replace('.', '-')
+                    reportMetrics("${buildName}.tests.${title}", [2])
+                }
             }
         }
+    }
+
+
+    @NonCPS
+    private def getPlatform(build) {
+        def platform = null
+        def pattern = Pattern.compile('\\+*\\sPLATFORM=(?<platform>.*)')
+        
+        build.rawBuild.logReader.withReader {
+            while (line = it.readLine()) {
+                def matcher = pattern.matcher(line)
+                if (matcher.find()) {
+                    platform = matcher.group('platform')
+                }
+            }
+        }
+
+        if (platform == null) {
+            println 'WARNING: No platform was found for this build. Did jenkins/getPlatform.py get executed?'
+        }
+        
+        return platform
     }
 }
