@@ -8,6 +8,7 @@ import com.cloudbees.plugins.credentials.domains.DomainRequirement
 import java.io.DataOutputStream
 import java.net.Socket
 import java.util.Collections
+import java.util.regex.Pattern
 
 import hudson.security.ACL
 import hudson.tasks.junit.TestResultAction
