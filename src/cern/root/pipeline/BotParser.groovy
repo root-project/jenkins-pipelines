@@ -17,7 +17,7 @@ class BotParser implements Serializable {
     /**
      * Whether the default configuration for the job should be discarded.
      */
-    boolean overrideDefaultConfiguration
+    boolean overrideDefaultConfiguration = false
 
     /**
      * List of the build configurations that was not recognized.
