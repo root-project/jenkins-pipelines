@@ -34,7 +34,7 @@ class GitHub implements Serializable {
      * @param statusText Status text to add on GitHub.
      */
     void setFailedCommitStatus(statusText) {
-        setCommitStatus(GHCommitState.FAILURE, statusText, currentBuild)
+        setCommitStatus(GHCommitState.FAILURE, statusText)
     }
 
     /**
@@ -42,7 +42,7 @@ class GitHub implements Serializable {
      * @param statusText Status text to add on GitHub.
      */
     void setSucceedCommitStatus(statusText) {
-        setCommitStatus(GHCommitState.SUCCESS, statusText, currentBuild)
+        setCommitStatus(GHCommitState.SUCCESS, statusText)
     }
 
     @NonCPS
