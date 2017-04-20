@@ -20,7 +20,7 @@ properties([
 
 GitHub gitHub = new GitHub(this, 'Regular PR', ghprbGhRepository, ghprbPullId, sha1)
 BotParser parser = new BotParser(this, params.ExtraCMakeOptions)
-GenericBuild build = new GenericBuild(this)
+GenericBuild build = new GenericBuild(this, 'root-pullrequests-build')
 
 build.addBuildParameter('ROOT_REFSPEC', '+refs/pull/*:refs/remotes/origin/pr/*')
 build.addBuildParameter('ROOT_BRANCH', "origin/pr/${ghprbPullId}/merge")

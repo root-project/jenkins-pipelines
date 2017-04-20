@@ -14,7 +14,7 @@ properties([
     ])
 ])
 
-GenericBuild build = new GenericBuild(this)
+GenericBuild build = new GenericBuild(this, 'root-incrementals-build')
 
 stage('Configuring') {
     node('master') {

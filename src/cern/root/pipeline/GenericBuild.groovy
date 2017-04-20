@@ -18,15 +18,18 @@ class GenericBuild implements Serializable {
     private def mode
     private def graphiteReporter
     private def buildParameters = []
+    private def jobName
 
     /**
      * Creates a new generic build.
      * @param script Script context.
+     * @param jobName Name of generic job that will execute across all platforms.
      */
-    GenericBuild(script) {
+    GenericBuild(script, jobName) {
         this.script = script
         this.mode = script.params.MODE
         this.graphiteReporter = new GraphiteReporter(script, mode)
+        this.jobName = jobName
 
         for (ParameterValue p in script.currentBuild.rawBuild.getAction(ParametersAction.class)) {
            addBuildParameter(p.name, String.valueOf(p.value))
@@ -49,7 +52,7 @@ class GenericBuild implements Serializable {
         jobParameters << script.string(name: 'COMPILER', value: compiler)
         jobParameters << script.string(name: 'BUILDTYPE', value: buildType)
 
-        def result = script.build job: 'ROOT-generic-build', parameters: jobParameters, propagate: false
+        def result = script.build job: jobName, parameters: jobParameters, propagate: false
         def resultWrapper = [result: result, label: label, compiler: compiler, buildType: buildType]
         buildResults << resultWrapper
 
