@@ -61,7 +61,7 @@ class GenericBuild implements Serializable {
             script.currentBuild.result = result.result
         }
 
-        postBuildSteps.each { postStep ->
+        for (postStep in postBuildSteps) {
             postStep(resultWrapper)
         }
 
@@ -85,7 +85,7 @@ class GenericBuild implements Serializable {
      * @param configs Configurations to add.
      */
     void addConfigurations(configs) {
-        configs.each { config -> 
+        for (config in configs) {
             buildOn(config.label, config.compiler, config.buildType)
         }
     }

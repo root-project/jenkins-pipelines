@@ -51,7 +51,7 @@ class BotParser implements Serializable {
 
     private def appendFlagsToMap(flags, map) {
         def parsedCompilerFlags = flags.split(' ')
-        parsedCompilerFlags.each { unparsedFlag ->
+        for (unparsedFlag in parsedCompilerFlags) {
             if (unparsedFlag.contains('=')) {
                 def flag = unparsedFlag.split('=')
 
@@ -95,7 +95,7 @@ class BotParser implements Serializable {
             // Parse and set the config
             def patterns = matrix.trim().replace(',' ,'').split(' ')
 
-            patterns.each { unparsedPattern ->
+            for (unparsedPattern in patterns) {
                 def patternArgs = unparsedPattern.split('/')
                 def compiler = patternArgs[1]
                 def platform = patternArgs[0]
@@ -134,7 +134,7 @@ class BotParser implements Serializable {
         if (invalidBuildConfigurations.size() > 0) {
             def unrecognizedPlatforms = new StringBuilder()
 
-            invalidBuildConfigurations.each { config ->
+            for (config in invalidBuildConfigurations) {
                 unrecognizedPlatforms.append('`' + config.compiler + '`/`' + config.platform + '`, ')
             }
 
@@ -146,12 +146,12 @@ class BotParser implements Serializable {
             def commentResponse = new StringBuilder()
             commentResponse.append('Starting build on ')
 
-            validBuildConfigurations.each { config ->
+            for (config in validBuildConfigurations) {
                 commentResponse.append('`' + config.compiler + '`/`' + config.platform + '`, ')
             }
 
             if (!overrideDefaultConfiguration) {
-                BuildConfiguration.getPullrequestConfiguration().each { config ->
+                for (config in BuildConfiguration.getPullrequestConfiguration()) {
                     commentResponse.append('`' + config.compiler + '`/`' + config.label + '`, ')
                 }
             }
@@ -173,7 +173,7 @@ class BotParser implements Serializable {
      * @param build Build to configure.
      */
     void configure(build) {
-        validBuildConfigurations.each { config ->
+        for (config in validBuildConfigurations) {
             build.buildOn(config.platform, config.compiler, 'Debug')
         }
 
