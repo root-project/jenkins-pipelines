@@ -45,5 +45,5 @@ stage('Building') {
 }
 
 stage('Publish reports') {
-    //build.sendEmails()
+    build.sendEmails()
 }
