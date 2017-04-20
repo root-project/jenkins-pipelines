@@ -12,9 +12,9 @@ properties([
         string(name: 'sha1', defaultValue: '48214f30056e120818ea73b9fadf7b72268bc7de'),
         string(name: 'VERSION', defaultValue: 'master', description: 'Branch to be built'),
         string(name: 'EXTERNALS', defaultValue: 'ROOT-latest', description: ''),
-        string(name: 'EMPTY_BINARY', defaultValue: 'false', description: 'Boolean to empty the binary directory (i.e. to force a full re-build)'),
+        string(name: 'EMPTY_BINARY', defaultValue: 'true', description: 'Boolean to empty the binary directory (i.e. to force a full re-build)'),
         string(name: 'ExtraCMakeOptions', defaultValue: '-Dvc=OFF -Dimt=OFF -Dccache=ON', description: 'Additional CMake configuration options of the form "-Doption1=value1 -Doption2=value2"'),
-        string(name: 'MODE', defaultValue: 'experimental', description: 'The build mode'),
+        string(name: 'MODE', defaultValue: 'pullrequests', description: 'The build mode')
     ])
 ])
 
