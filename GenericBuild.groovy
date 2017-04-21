@@ -59,9 +59,10 @@ node(LABEL) {
         }
 
         stage('Generate reports') {
-            step([$class: 'LogParserPublisher',
+            /*step([$class: 'LogParserPublisher',
                     parsingRulesPath: "${pwd()}/rootspi/jenkins/pipeline/ROOT-incremental-LogParserRules.txt", 
                     useProjectRule: false, unstableOnWarning: false, failBuildOnError: true])
+                    */
         }
 
         //stage('Archive environment') {
