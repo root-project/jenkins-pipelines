@@ -25,9 +25,9 @@ class GenericBuild implements Serializable {
      * @param script Script context.
      * @param jobName Name of generic job that will execute across all platforms.
      */
-    GenericBuild(script, jobName) {
+    GenericBuild(script, jobName, mode) {
         this.script = script
-        this.mode = script.params.MODE
+        this.mode = mode
         this.graphiteReporter = new GraphiteReporter(script, mode)
         this.jobName = jobName
 

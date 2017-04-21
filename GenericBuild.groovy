@@ -3,6 +3,8 @@
 properties([
     parameters([
         string(name: 'ROOT_REFSPEC', defaultValue: '', description: 'Refspec for ROOT repository'),
+        string(name: 'ROOTTEST_BRANCH', defaultValue: 'master', description: 'Name of the ROOT branch to work with'),
+        string(name: 'ROOT_BRANCH', defaultValue: 'master', description: 'Name of the roottest branch to work with')
     ])
 ])
 
@@ -15,7 +17,7 @@ for (ParameterValue p in params) {
 // TODO: This should be avoided 
 env.GIT_URL = 'https://github.com/root-project/root.git'
 
-currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL")
+currentBuild.setDisplayName("#$BUILD_NUMBER $BUILD_NOTE $LABEL/$COMPILER")
 
 node(LABEL) {
     timestamps {
@@ -44,9 +46,9 @@ node(LABEL) {
                 sh 'rootspi/jenkins/jk-all test'
 
                 def testThreshold = [[$class: 'FailedThreshold', 
-                                    failureNewThreshold: '0', failureThreshold: '0', unstableNewThreshold: '0', 
-                                    unstableThreshold: '0'], [$class: 'SkippedThreshold', failureNewThreshold: '', 
-                                    failureThreshold: '', unstableNewThreshold: '', unstableThreshold: '']]
+                        failureNewThreshold: '0', failureThreshold: '0', unstableNewThreshold: '0', 
+                        unstableThreshold: '0'], [$class: 'SkippedThreshold', failureNewThreshold: '', 
+                        failureThreshold: '', unstableNewThreshold: '', unstableThreshold: '']]
 
                 step([$class: 'XUnitBuilder', 
                         testTimeMargin: '3000', thresholdMode: 1, thresholds: testThreshold, 

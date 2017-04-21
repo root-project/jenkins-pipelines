@@ -5,11 +5,11 @@ import cern.root.pipeline.*
 
 properties([
     parameters([
-        string(name: 'ghprbPullId', defaultValue: '1'),
-        string(name: 'ghprbGhRepository', defaultValue: 'root/root'),
+        string(name: 'ghprbPullId', defaultValue: '516'),
+        string(name: 'ghprbGhRepository', defaultValue: 'root-project/root'),
         string(name: 'ghprbCommentBody', defaultValue: '@phsft-bot build'),
         string(name: 'ghprbTargetBranch', defaultValue: 'master'),
-        string(name: 'sha1', defaultValue: '48214f30056e120818ea73b9fadf7b72268bc7de'),
+        string(name: 'sha1', defaultValue: ''),
         string(name: 'VERSION', defaultValue: 'master', description: 'Branch to be built'),
         string(name: 'EXTERNALS', defaultValue: 'ROOT-latest', description: ''),
         string(name: 'EMPTY_BINARY', defaultValue: 'true', description: 'Boolean to empty the binary directory (i.e. to force a full re-build)'),
@@ -21,11 +21,13 @@ properties([
 
 GitHub gitHub = new GitHub(this, PARENT, ghprbGhRepository, ghprbPullId, sha1)
 BotParser parser = new BotParser(this, params.ExtraCMakeOptions)
-GenericBuild build = new GenericBuild(this, 'root-pullrequests-build')
+GenericBuild build = new GenericBuild(this, 'root-pullrequests-build', params.MODE)
 
 build.addBuildParameter('ROOT_REFSPEC', '+refs/pull/*:refs/remotes/origin/pr/*')
 build.addBuildParameter('ROOT_BRANCH', "origin/pr/${ghprbPullId}/merge")
 build.addBuildParameter('ROOTTEST_BRANCH', "${params.ghprbTargetBranch}")
+build.addBuildParameter('GIT_COMMIT', "${params.sha1}")
+build.addBuildParameter('BUILD_NOTE', "PR #$ghprbPullId")
 
 if (parser.isParsableComment(ghprbCommentBody.trim())) {
     parser.parse()
