@@ -34,6 +34,7 @@ if (parser.isParsableComment(ghprbCommentBody.trim())) {
 parser.postStatusComment(gitHub)
 parser.configure(build)
 
+gitHub.setPendingCommitStatus('Building')
 stage('Building') {
     build.build()
 

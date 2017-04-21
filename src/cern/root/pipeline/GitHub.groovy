@@ -47,6 +47,14 @@ class GitHub implements Serializable {
         setCommitStatus(GHCommitState.SUCCESS, statusText)
     }
 
+    /**
+     * Sets the commit status of this build to pending.
+     * @param statusText Status text to add on GitHub.
+     */
+    void setPendingCommitStatus(statusText) {
+        setCommitStatus(GHCommitState.PENDING, statusText)
+    }
+
     @NonCPS
     private void setCommitStatus(status, statusText) {
         def triggerJob = script.manager.hudson.getJob(parentJob)
