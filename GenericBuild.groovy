@@ -17,7 +17,7 @@ for (ParameterValue p in params) {
 // TODO: This should be avoided 
 env.GIT_URL = 'https://github.com/root-project/root.git'
 
-currentBuild.setDisplayName("#$BUILD_NUMBER $BUILD_NOTE $LABEL/$COMPILER")
+currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL/$COMPILER $BUILD_NOTE")
 
 node(LABEL) {
     timestamps {
