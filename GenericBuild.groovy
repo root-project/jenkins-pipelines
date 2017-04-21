@@ -12,6 +12,9 @@ for (ParameterValue p in params) {
     env[p.key] = p.value
 }
 
+// TODO: This should be avoided 
+env.GIT_URL = 'https://github.com/root-project/root.git'
+
 currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL")
 
 node(LABEL) {
@@ -20,7 +23,7 @@ node(LABEL) {
             dir('root') {
                 // TODO: Use the git step when it has implemented specifying refspecs
                 checkout([$class: 'GitSCM', branches: [[name: ROOT_BRANCH]], doGenerateSubmoduleConfigurations: false, extensions: [],
-                        submoduleCfg: [], userRemoteConfigs: [[refspec: ROOT_REFSPEC, url: 'https://github.com/root-project/root.git']]])
+                        submoduleCfg: [], userRemoteConfigs: [[refspec: ROOT_REFSPEC, url: env.GIT_URL]]])
             }
 
             dir('roottest') {
