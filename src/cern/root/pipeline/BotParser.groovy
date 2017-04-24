@@ -47,6 +47,7 @@ class BotParser implements Serializable {
     BotParser(script, defaultExtraCMakeOptions) {
         this.script = script
         this.defaultExtraCMakeOptions = defaultExtraCMakeOptions
+        this.extraCMakeOptions = defaultExtraCMakeOptions
     }
 
     private def appendFlagsToMap(flags, map) {
@@ -116,8 +117,6 @@ class BotParser implements Serializable {
             appendFlagsToMap(flags, cmakeFlagsMap)
 
             extraCMakeOptions = cmakeFlagsMap.collect { /$it.key=$it.value/ } join ' '
-        } else {
-            extraCMakeOptions = defaultExtraCMakeOptions
         }
 
         script.println "ExtraCMakeOptions set to $extraCMakeOptions"
