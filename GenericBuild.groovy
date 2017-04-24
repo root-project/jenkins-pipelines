@@ -55,7 +55,11 @@ node(LABEL) {
                         tools: [[$class: 'CTestType', 
                                 deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/Testing/*/Test.xml', 
                                 skipNoTestFiles: false, stopProcessingIfError: true]]])
-
+                
+                if (currentBuild.result == 'FAILURE') {
+                    BuildUtil.resetStatus(currentBuild.rawBuild)
+                    throw new Exception("Test result caused build to fail")
+                }
             }
         } catch (err) {
             println 'Build failed because:'
