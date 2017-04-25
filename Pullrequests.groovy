@@ -9,6 +9,7 @@ properties([
         string(name: 'ghprbGhRepository', defaultValue: 'root-project/root'),
         string(name: 'ghprbCommentBody', defaultValue: '@phsft-bot build'),
         string(name: 'ghprbTargetBranch', defaultValue: 'master'),
+        string(name: 'ghprbActualCommit', defaultValue: ''),
         string(name: 'sha1', defaultValue: ''),
         string(name: 'VERSION', defaultValue: 'master', description: 'Branch to be built'),
         string(name: 'EXTERNALS', defaultValue: 'ROOT-latest', description: ''),
