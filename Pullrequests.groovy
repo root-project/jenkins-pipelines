@@ -20,7 +20,7 @@ properties([
     ])
 ])
 
-GitHub gitHub = new GitHub(this, PARENT, ghprbGhRepository, ghprbPullId, ghprbActualCommit)
+GitHub gitHub = new GitHub(this, PARENT, ghprbGhRepository, ghprbPullId, params.ghprbActualCommit)
 BotParser parser = new BotParser(this, params.ExtraCMakeOptions)
 GenericBuild build = new GenericBuild(this, 'root-pullrequests-build', params.MODE)
 
