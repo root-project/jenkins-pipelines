@@ -138,12 +138,12 @@ class GenericBuild implements Serializable {
 
         def result = template.make(binding).toString()
 
-        def recipients = 'martin.storo.nyflott@cern.ch'
+        def recipients = 'axel.naumann@cern.ch, pcanal@fnal.gov, patricia.mendez@cern.ch, pere.mato@cern.ch, martin.storo.nyflott@cern.ch, danilo.piparo@cern.ch'
 
         script.emailext(
                 body: result, mimeType: 'text/html',
-                //recipientProviders:
-                //        [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
+                recipientProviders:
+                        [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
                 replyTo: '$DEFAULT_REPLYTO', subject: '$DEFAULT_SUBJECT',
                 to: recipients)
     }
