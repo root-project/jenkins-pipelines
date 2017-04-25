@@ -12,7 +12,7 @@ class BuildUtil {
      * @param build The build to reset.
      */
     @NonCPS
-    def resetStatus(Run build) {
+    static def resetStatus(Run build) {
         def field = Run.getDeclaredField('result')
         field.setAccessible(true)
         field.set(build, null)
