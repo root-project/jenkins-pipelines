@@ -1,5 +1,8 @@
 #!groovy
 
+@Library('root-pipelines')
+import cern.root.pipeline.*
+
 properties([
     parameters([
         string(name: 'ROOT_REFSPEC', defaultValue: '', description: 'Refspec for ROOT repository'),
