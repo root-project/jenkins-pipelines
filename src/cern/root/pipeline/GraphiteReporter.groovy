@@ -80,15 +80,15 @@ class GraphiteReporter implements Serializable {
         def totalRunTime = System.currentTimeMillis() - build.getTimeInMillis()
         script.println("Total build time: " + totalRunTime)
 
-        reportMetrics("build.${mode}.total_run_time", [now, (long)(totalRunTime / 1000)])
+        reportMetrics("build.${mode}.total_run_time", [(long)(totalRunTime / 1000), now])
 
         def action = build.getAction(TimeInQueueAction)
         if (action != null) {
             // Time it takes to actually build
             def buildTime = totalRunTime - action.getQueuingDurationMillis()
 
-            reportMetrics("build.${mode}.run_time", [now, (long)(buildTime / 1000)])
-            reportMetrics("build.${mode}.queue_time", [now, (long)(action.getQueuingDurationMillis() / 1000)])
+            reportMetrics("build.${mode}.run_time", [(long)(buildTime / 1000), now])
+            reportMetrics("build.${mode}.queue_time", [(long)(action.getQueuingDurationMillis() / 1000), now])
         }
 
         def testResults = build.getAction(TestResultAction)
@@ -104,24 +104,24 @@ class GraphiteReporter implements Serializable {
             if (platform != null) {
                 def buildName = "${script.VERSION}-$platform"
 
-                reportMetrics("${buildName}.testresult.total", [now, totalTestCount])
-                reportMetrics("${buildName}.testresult.passed", [now, passedTests.size()])
-                reportMetrics("${buildName}.testresult.skipped", [now, skippedTests.size()])
-                reportMetrics("${buildName}.testresult.failed", [now, failedTests.size()])
+                reportMetrics("${buildName}.testresult.total", [totalTestCount, now])
+                reportMetrics("${buildName}.testresult.passed", [passedTests.size(), now])
+                reportMetrics("${buildName}.testresult.skipped", [skippedTests.size(), now])
+                reportMetrics("${buildName}.testresult.failed", [failedTests.size(), now])
 
                 for (test in passedTests) {
                     def title = test.name.replace('.', '-')
-                    reportMetrics("${buildName}.tests.${title}", [now, 0])
+                    reportMetrics("${buildName}.tests.${title}", [0, now])
                 }
 
                 for (test in skippedTests) {
                     def title = test.name.replace('.', '-')
-                    reportMetrics("${buildName}.tests.${title}", [now, 1])
+                    reportMetrics("${buildName}.tests.${title}", [1, now])
                 }
 
                 for (test in failedTests) {
                     def title = test.name.replace('.', '-')
-                    reportMetrics("${buildName}.tests.${title}", [now, 2])
+                    reportMetrics("${buildName}.tests.${title}", [2, now])
                 }
             }
         }
