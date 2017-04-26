@@ -67,8 +67,6 @@ class GraphiteReporter implements Serializable {
 
         stream.writeBytes(payload)
         connection.close()
-
-        script.println("Posting graphite data: " + payload)
     }
 
     /**
