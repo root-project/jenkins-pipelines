@@ -28,9 +28,9 @@ build.addBuildParameter('ROOT_REFSPEC', '+refs/pull/*:refs/remotes/origin/pr/*')
 build.addBuildParameter('ROOT_BRANCH', "origin/pr/${ghprbPullId}/merge")
 build.addBuildParameter('ROOTTEST_BRANCH', "${params.ghprbTargetBranch}")
 build.addBuildParameter('GIT_COMMIT', "${params.sha1}")
-build.addBuildParameter('BUILD_NOTE', "PR #$ghprbPullId")
+build.addBuildParameter('BUILD_DESCRIPTION', "PR #$ghprbPullId")
 
-currentBuild.setDisplayName("#$BUILD_NUMBER PR #$ghprbPullId")
+currentBuild.setDescription("#$BUILD_NUMBER PR #$ghprbPullId")
 
 if (parser.isParsableComment(ghprbCommentBody.trim())) {
     parser.parse()
