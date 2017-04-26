@@ -63,7 +63,7 @@ node(LABEL) {
         } catch (err) {
             println 'Build failed because:'
             println err
-            currentBuild.result = Result.FAILURE
+            currentBuild.result = 'FAILURE'
         }
 
         stage('Generate reports') {
