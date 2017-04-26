@@ -71,7 +71,7 @@ node(LABEL) {
 
         stage('Generate reports') {
             step([$class: 'LogParserPublisher',
-                    parsingRulesPath: "${pwd()}/rootspi/jenkins/pipeline/ROOT-incremental-LogParserRules.txt", 
+                    parsingRulesPath: "${pwd()}/rootspi/jenkins/logparser-rules/ROOT-incremental-LogParserRules.txt", 
                     useProjectRule: false, unstableOnWarning: false, failBuildOnError: true])
         }
 
