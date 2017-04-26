@@ -4,8 +4,8 @@ properties([
     parameters([
         string(name: 'ROOT_REFSPEC', defaultValue: '', description: 'Refspec for ROOT repository'),
         string(name: 'ROOTTEST_BRANCH', defaultValue: 'master', description: 'Name of the ROOT branch to work with'),
-        string(name: 'ROOT_BRANCH', defaultValue: 'master', description: 'Name of the roottest branch to work with')
-        string(name: 'BUILD_NOTE', defaultValue: '', description: 'Note to add after label/compiler in job name')
+        string(name: 'ROOT_BRANCH', defaultValue: 'master', description: 'Name of the roottest branch to work with'),
+        string(name: 'BUILD_NOTE', defaultValue: '', description: 'Note to add after label/compiler in job name'),
         string(name: 'BUILD_DESCRIPTION', defaultValue: '', description: 'Build description')
     ])
 ])
