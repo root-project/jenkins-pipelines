@@ -1,8 +1,5 @@
 #!groovy
 
-@Library('root-pipelines')
-import cern.root.pipeline.*
-
 properties([
     parameters([
         string(name: 'ROOT_REFSPEC', defaultValue: '', description: 'Refspec for ROOT repository'),
@@ -60,7 +57,6 @@ node(LABEL) {
                                 skipNoTestFiles: false, stopProcessingIfError: true]]])
                 
                 if (currentBuild.result == 'FAILURE') {
-                    BuildUtil.resetStatus(currentBuild.rawBuild)
                     throw new Exception("Test result caused build to fail")
                 }
             }
