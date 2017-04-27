@@ -36,7 +36,7 @@ node(LABEL) {
             }
 
             dir('rootspi') {
-                git url: 'https://github.com/martinmine/rootspi.git', branch: 'pipelines'
+                git url: 'https://github.com/root-project/rootspi.git'
             }
         }
 
