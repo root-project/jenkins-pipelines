@@ -8,7 +8,7 @@ class BuildConfiguration {
      * @return The available platforms/labels that can be used.
      */
     static def getAvailablePlatforms() {
-        return ['centos7', 'mac1011', 'slc6', 'ubuntu14']
+        return ['centos7', 'mac1011', 'slc6', 'ubuntu14', 'mac1012']
     }
 
     /**
@@ -24,7 +24,7 @@ class BuildConfiguration {
     static def getPullrequestConfiguration() {
         return [
             [label: 'centos7', compiler: 'gcc49', buildType: 'Debug'],
-            [label: 'mac1011', compiler: 'native', buildType: 'Debug'],
+            [label: 'mac1012', compiler: 'native', buildType: 'Debug'],
             [label: 'slc6', compiler: 'gcc49', buildType: 'Debug'],
             [label: 'slc6', compiler: 'gcc62', buildType: 'Debug'],
             [label: 'ubuntu14', compiler: 'native', buildType: 'Debug']
