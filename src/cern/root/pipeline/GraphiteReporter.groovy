@@ -76,7 +76,6 @@ class GraphiteReporter implements Serializable {
     def reportBuild(build) {
         def now = (long)(System.currentTimeMillis() / 1000)
         def totalRunTime = System.currentTimeMillis() - build.getTimeInMillis()
-        script.println("Total build time: " + totalRunTime)
 
         reportMetrics("build.${mode}.total_run_time", [(long)(totalRunTime / 1000), now])
 
