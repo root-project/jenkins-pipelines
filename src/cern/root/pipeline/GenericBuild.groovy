@@ -56,16 +56,17 @@ class GenericBuild implements Serializable {
         def resultWrapper = [result: result, label: label, compiler: compiler, buildType: buildType]
         buildResults << resultWrapper
 
-        // Propagate build result without throwing an exception
-        if (result.result != Result.SUCCESS) {
-            script.currentBuild.result = result.result
-        }
-
         for (postStep in postBuildSteps) {
             postStep(resultWrapper)
         }
 
         graphiteReporter.reportBuild(result.rawBuild)
+
+        // Propagate build result
+        if (result.result != Result.SUCCESS) {
+            script.currentBuild.result = result.result
+            throw new Exception("Build completed with result: ${result.result}")
+        }
     }
 
     /**
@@ -94,10 +95,14 @@ class GenericBuild implements Serializable {
      * Starts the build.
      */
     void build() {
-        script.parallel(configuration)
+        try {
+            script.parallel(configuration)
 
-        if (script.currentBuild.result == null) {
-            script.currentBuild.result = Result.SUCCESS
+            if (script.currentBuild.result == null) {
+                script.currentBuild.result = Result.SUCCESS
+            }
+        } catch (e) {
+            script.println "Build failed because: ${e.message}"
         }
     }
 

@@ -40,16 +40,15 @@ parser.postStatusComment(gitHub)
 parser.configure(build)
 
 gitHub.setPendingCommitStatus('Building')
-stage('Building') {
-    build.build()
 
+build.build()
+
+stage('Publish reports') {
     if (currentBuild.result == 'SUCCESS') {
         gitHub.setSucceedCommitStatus('Build passed')
     } else {
         gitHub.setFailedCommitStatus('Build failed')
     }
-}
 
-stage('Publish reports') {
     build.sendEmails()
 }
