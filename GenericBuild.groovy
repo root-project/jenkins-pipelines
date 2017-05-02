@@ -69,15 +69,21 @@ node(LABEL) {
             currentBuild.result = 'FAILURE'
         }
 
-        stage('Generate reports') {
-            step([$class: 'LogParserPublisher',
-                    parsingRulesPath: "${pwd()}/rootspi/jenkins/logparser-rules/ROOT-incremental-LogParserRules.txt", 
-                    useProjectRule: false, unstableOnWarning: false, failBuildOnError: true])
-        }
 
         //stage('Archive environment') {
         // TODO: Bundle and store build env in here
             //archiveArtifacts artifacts: 'build/'
         //}
+        stash includes: 'rootspi/jenkins/logparser-rules/*', name: 'logparser-rules'
+    }
+}
+
+// Log-parser-plugin will look for rules on master node. Unstash the rules and parse the rules. (JENKINS-38840)
+node('master') {
+    stage('Generate reports') {
+        unstash 'logparser-rules'
+        step([$class: 'LogParserPublisher',
+                parsingRulesPath: "${pwd()}/rootspi/jenkins/logparser-rules/ROOT-incremental-LogParserRules.txt", 
+                useProjectRule: false, unstableOnWarning: false, failBuildOnError: true])
     }
 }
