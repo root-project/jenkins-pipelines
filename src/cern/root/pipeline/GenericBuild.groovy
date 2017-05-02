@@ -78,7 +78,11 @@ class GenericBuild implements Serializable {
     void buildOn(label, compiler, buildType) {
         script.println "Preparing build on $label"
         def configurationLabel = "$label-$compiler-$buildType"
-        configuration[configurationLabel] = { performBuild(label, compiler, buildType) }
+        configuration[configurationLabel] = { 
+            script.stage("Build - $configurationLabel") {
+                performBuild(label, compiler, buildType) 
+            }
+        }
     }
 
     /**
