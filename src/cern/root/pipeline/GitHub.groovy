@@ -27,8 +27,6 @@ class GitHub implements Serializable {
         this.repo = repo
         this.prId = prId
         this.sha1 = sha1
-
-        script.println "Test to see if changes actually makes it got Jenkins"
     }
 
     /**
