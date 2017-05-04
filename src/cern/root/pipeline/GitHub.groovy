@@ -61,7 +61,7 @@ class GitHub implements Serializable {
         def prbTrigger = triggerJob.getTrigger(GhprbTrigger.class)
         def repo = prbTrigger.getGitHub().getRepository(repo)
 
-        repo.createCommitStatus(sha1, status, script.currentBuild.absoluteUrl, statusText, 'Jenkins CI build')
+        repo.createCommitStatus(sha1, status, script.currentBuild.absoluteUrl + 'console', statusText, 'Jenkins CI build')
         script.println "Updating commit status to $status"
     }
 
