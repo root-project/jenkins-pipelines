@@ -32,6 +32,8 @@ build.addBuildParameter('BUILD_NOTE', "PR #$ghprbPullId")
 
 currentBuild.setDisplayName("#$BUILD_NUMBER PR #$ghprbPullId")
 
+build.cancelBuilds('.*PR #' + ghprbPullId + '$')
+
 if (parser.isParsableComment(ghprbCommentBody.trim())) {
     parser.parse()
 }

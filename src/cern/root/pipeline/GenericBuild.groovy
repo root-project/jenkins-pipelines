@@ -156,4 +156,17 @@ class GenericBuild implements Serializable {
                 replyTo: '$DEFAULT_REPLYTO', subject: '$DEFAULT_SUBJECT',
                 to: recipients)
     }
+
+    /**
+     * Cancels all running builds where title matches a certain pattern.
+     * @param pattern The pattern to match the build titles to cancel.
+     */
+    @NonCPS
+    void cancelBuilds(String pattern) {
+        script.currentBuild.rawBuild.parent.builds.each { run ->
+            if (run.number != script.currentBuild.number && run.displayName.matches(pattern) && run.isBuilding()) {
+                run.executor.interrupt(Result.ABORTED);
+            }
+        }
+    }
 }
