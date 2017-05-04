@@ -63,7 +63,7 @@ class GenericBuild implements Serializable {
         graphiteReporter.reportBuild(result.rawBuild)
 
         // Propagate build result
-        if (result.result != Result.SUCCESS) {
+        if (result.result != 'SUCCESS') {
             script.currentBuild.result = result.result
             throw new Exception("Build completed with result: ${result.result}")
         }
