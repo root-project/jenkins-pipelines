@@ -461,7 +461,7 @@ buildResults.each { buildResult ->
                     replaceLink = "href=\"${rooturl}${url}parsed_console/"
             
                     warnings = warning_links_file.readLines().grep { it.contains "href" }.collect { line ->
-                        line.replaceAll(patternFont, "").replaceAll(patternLink, replaceLink).minus("</font>").minus("/mnt" + run.getWorkspace().getRemote())
+                        line.replaceAll(patternFont, "").replaceAll(patternLink, replaceLink).minus("</font>").minus("/mnt")
                     }
 
                     for (String warning : warnings) { %> ${warning} <% }
