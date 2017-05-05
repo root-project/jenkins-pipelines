@@ -52,5 +52,7 @@ stage('Publish reports') {
         gitHub.setFailedCommitStatus('Build failed')
     }
 
-    build.sendEmails()
+    if (currentBuild.result != null) {
+        build.sendEmails()
+    }
 }
