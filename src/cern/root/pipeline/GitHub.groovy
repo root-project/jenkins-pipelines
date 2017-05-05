@@ -1,5 +1,8 @@
 package cern.root.pipeline
 
+import hudson.plugins.logparser.LogParserAction
+import hudson.tasks.junit.TestResultAction
+import jenkins.model.Jenkins
 import org.jenkinsci.plugins.ghprb.GhprbTrigger
 import org.kohsuke.github.GHCommitState
 
@@ -73,5 +76,71 @@ class GitHub implements Serializable {
         def triggerJob = script.manager.hudson.getJob(parentJob)
         def prbTrigger = triggerJob.getTrigger(GhprbTrigger.class)
         prbTrigger.getRepository().addComment(Integer.valueOf(prId), comment)
+    }
+
+    /**
+     * Posts a build summary comment on GitHub on the current pull request.
+     * @param buildWrapper Build result wrapper.
+     */
+    @NonCPS
+    void postResultComment(buildWrapper) {
+        def commentBuilder = new StringBuilder()
+        def buildUrl = Jenkins.activeInstance.rootUrl + buildWrapper.result.rawBuild.url
+        commentBuilder.append("Build failed on ${buildWrapper.label}/${buildWrapper.compiler}.\n")
+        commentBuilder.append("[See console output](${buildUrl}console).\n")
+        
+        def logParserAction = buildWrapper.result.rawBuild.getAction(LogParserAction.class)
+        def testResultAction = buildWrapper.result.rawBuild.getAction(TestResultAction.class)
+
+        if (logParserAction?.result.totalErrors > 0) {
+            commentBuilder.append("### Errors:\n")
+
+            logParserAction.result.getErrorLinksReader().withReader {
+                def line = null
+                while ((line = it.readLine()) != null) {
+                    def start = '<span style="color:red">'
+                    def startPos = line.indexOf(start) + start.length()
+                    def endPos = line.indexOf('</span></a></li><br/>')
+
+                    if (endPos > startPos) {
+                        def msg = line.substring(startPos, endPos)
+                        commentBuilder.append("- $msg \n")
+                    }
+                }
+            }
+            commentBuilder.append("\n")
+        }
+
+        if (logParserAction?.result.totalWarnings > 0) {
+            commentBuilder.append("### Warnings:\n")
+
+            logParserAction.result.getWarningLinksReader().withReader {
+                def line = null
+                while ((line = it.readLine()) != null) {
+                    def start = '<span style="color:orange">'
+                    def startPos = line.indexOf(start) + start.length()
+                    def endPos = line.indexOf('</span></a></li><br/>')
+
+                    if (endPos > startPos) {
+                        def msg = line.substring(startPos, endPos)
+                        commentBuilder.append("- $msg \n")
+                    }
+                }
+            }
+            commentBuilder.append("\n")
+        }
+
+        if (testResultAction?.failCount > 0) {
+            commentBuilder.append("### Failing tests:\n")
+
+            testResultAction.failedTests.each { test ->
+                def testLocation = test.getRelativePathFrom(null).minus('junit/')
+                def testUrl = "${buildUrl}testReport/${testLocation}"
+
+                commentBuilder.append("- [${test.fullName}](${testUrl})\n")
+            }
+        }
+
+        postComment(commentBuilder.toString())
     }
 }

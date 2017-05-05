@@ -34,6 +34,12 @@ currentBuild.setDisplayName("#$BUILD_NUMBER PR #$ghprbPullId")
 
 build.cancelBuilds('.*PR #' + ghprbPullId + '$')
 
+build.afterBuild({buildWrapper -> 
+    if (buildWrapper.result.result != 'SUCCESS') {
+        gitHub.postResultComment(buildWrapper)
+    }
+})
+
 if (parser.isParsableComment(ghprbCommentBody.trim())) {
     parser.parse()
 }
