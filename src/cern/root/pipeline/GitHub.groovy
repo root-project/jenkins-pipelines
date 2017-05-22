@@ -92,8 +92,12 @@ class GitHub implements Serializable {
         def logParserAction = buildWrapper.result.rawBuild.getAction(LogParserAction.class)
         def testResultAction = buildWrapper.result.rawBuild.getAction(TestResultAction.class)
 
+        def maxMessages = 10
+
         if (logParserAction?.result.totalErrors > 0) {
             commentBuilder.append("### Errors:\n")
+            def ignoredMessages = 0
+            def totalMessages = 0
 
             logParserAction.result.getErrorLinksReader().withReader {
                 def line = null
@@ -104,15 +108,26 @@ class GitHub implements Serializable {
 
                     if (endPos > startPos) {
                         def msg = line.substring(startPos, endPos)
-                        commentBuilder.append("- $msg \n")
+                        
+                        if (totalMessages++ < maxMessages) {
+                            commentBuilder.append("- $msg \n")                            
+                        } else {
+                            ignoredMessages++
+                        }
                     }
                 }
+            }
+
+            if (ignoredMessages > 0) {
+                commentBuilder.append("\nAnd $ignoredMessages more\n")
             }
             commentBuilder.append("\n")
         }
 
         if (logParserAction?.result.totalWarnings > 0) {
             commentBuilder.append("### Warnings:\n")
+            def ignoredMessages = 0
+            def totalMessages = 0
 
             logParserAction.result.getWarningLinksReader().withReader {
                 def line = null
@@ -123,21 +138,41 @@ class GitHub implements Serializable {
 
                     if (endPos > startPos) {
                         def msg = line.substring(startPos, endPos)
-                        commentBuilder.append("- $msg \n")
+
+                        if (totalMessages++ < maxMessages) {
+                            commentBuilder.append("- $msg \n")                            
+                        } else {
+                            ignoredMessages++
+                        }
                     }
                 }
             }
+
+            if (ignoredMessages > 0) {
+                commentBuilder.append("\nAnd $ignoredMessages more\n")
+            }
+
             commentBuilder.append("\n")
         }
 
         if (testResultAction?.failCount > 0) {
             commentBuilder.append("### Failing tests:\n")
+            def ignoredMessages = 0
+            def totalMessages = 0
 
             testResultAction.failedTests.each { test ->
-                def testLocation = test.getRelativePathFrom(null).minus('junit/')
-                def testUrl = "${buildUrl}testReport/${testLocation}"
+                if (totalMessages++ < maxMessages) {
+                    def testLocation = test.getRelativePathFrom(null).minus('junit/')
+                    def testUrl = "${buildUrl}testReport/${testLocation}"
 
-                commentBuilder.append("- [${test.fullName}](${testUrl})\n")
+                    commentBuilder.append("- [${test.fullName}](${testUrl})\n")
+                } else {
+                    ignoredMessages++
+                }
+            }
+
+            if (ignoredMessages > 0) {
+                commentBuilder.append("\nAnd $ignoredMessages more\n")
             }
         }
 

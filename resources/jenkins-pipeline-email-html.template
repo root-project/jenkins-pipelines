@@ -97,6 +97,8 @@ final BUILD_FAILURE = 2
 final BUILD_NOT_BUILT = 3
 final BUILD_ABORTED = 4
 
+final MAX_MESSAGES = 10
+
 // Total amount of occurences per status.CC9933
 // See ordinal value for index (hudson.model.Result)
 Integer[] total_status = new Integer[BUILD_TYPES]
@@ -441,8 +443,19 @@ buildResults.each { buildResult ->
                     errors = error_links_file.readLines().grep { it.contains "href" }.collect { line ->
                         line.replaceAll(patternFont, "").replaceAll(patternLink, replaceLink).minus("</font>").minus("/mnt") // TODO: fix this
                     }
+                    def ignoredMessages = 0
+                    def totalMessages = 0
+                    for (String error : errors) { 
+                        if (++totalMessages < MAX_MESSAGES) {
+                            %> ${error} <% 
+                        } else {
+                            ignoredMessages++
+                        }
+                    }
 
-                    for (String error : errors) { %> ${error} <% }
+                    if (ignoredMessages > 0) {
+                        %> And ${ignoredMessages} more <%
+                    }
 
                     %> </ul> <%
                 }
@@ -464,8 +477,19 @@ buildResults.each { buildResult ->
                         line.replaceAll(patternFont, "").replaceAll(patternLink, replaceLink).minus("</font>").minus("/mnt")
                     }
 
-                    for (String warning : warnings) { %> ${warning} <% }
+                    def ignoredMessages = 0
+                    def totalMessages = 0
+                    for (String warning : warnings) { 
+                        if (++totalMessages < MAX_MESSAGES) {
+                            %> ${warning} <% 
+                        } else {
+                            ignoredMessages++
+                        }
+                    }
 
+                    if (ignoredMessages > 0) {
+                        %> And ${ignoredMessages} more <%
+                    }
                     %>
                     </ul>
                     <%
@@ -488,6 +512,9 @@ buildResults.each { buildResult ->
                         <th>Age</th>
                     </tr>
                 <% 
+                
+                def ignoredMessages = 0
+                def totalMessages = 0
                 test_results.getFailedTests().each { result ->
                     String title = result.getFullName()
                     int age = 0
@@ -513,17 +540,26 @@ buildResults.each { buildResult ->
                         locationBuilder += "/" + titleParts[titleParts.length - 1]
                     }
 
-                    %>
-                    <tr>
-                        <td><a href="${locationBuilder}">${title}</a></td>
-                        <td>${String.format("%.1f", duration)} sec</td>
-                        <td>${age}</td>
-                    </tr>
-                    <%
+                    if (++totalMessages < MAX_MESSAGES) {
+                        %>
+                        <tr>
+                            <td><a href="${locationBuilder}">${title}</a></td>
+                            <td>${String.format("%.1f", duration)} sec</td>
+                            <td>${age}</td>
+                        </tr>
+                        <%
+                    } else {
+                        ignoredMessages++
+                    }
+
                 }
                 %>
                 </table>
                 <%
+
+                if (ignoredMessages > 0) {
+                    %> And ${ignoredMessages} more <%
+                }
             }
         %>
         </div>
