@@ -421,7 +421,7 @@ buildResults.each { buildResult ->
                     .loadClass("hudson.plugins.logparser.LogParserAction")
             log_parser = run.getAction(log_parser_class.asSubclass(Action.class))
             
-            if (log_parser != null) {
+            if (log_parser?.getResult() != null) {
                 log_parser_result = log_parser.getResult()
 
                 total_warnings = log_parser_result.getTotalWarnings()
