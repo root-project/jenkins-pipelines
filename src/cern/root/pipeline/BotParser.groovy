@@ -89,6 +89,7 @@ class BotParser implements Serializable {
     /**
      * Parses and sets the build configuration based on the comment set in isParsableComment.
      */
+    @NonCPS
     void parse() {
         script.println 'Comment recognized as a parseable command'
 
@@ -116,7 +117,6 @@ class BotParser implements Serializable {
             appendFlagsToMap(defaultExtraCMakeOptions, cmakeFlagsMap)
             appendFlagsToMap(flags, cmakeFlagsMap)
 
-            script.println "[dbg] cmakeFlagsMap: $cmakeFlagsMap"
             extraCMakeOptions = cmakeFlagsMap.collect { /$it.key=$it.value/ } join ' '
         }
 
