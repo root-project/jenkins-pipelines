@@ -116,6 +116,7 @@ class BotParser implements Serializable {
             appendFlagsToMap(defaultExtraCMakeOptions, cmakeFlagsMap)
             appendFlagsToMap(flags, cmakeFlagsMap)
 
+            script.println "[dbg] cmakeFlagsMap: $cmakeFlagsMap"
             extraCMakeOptions = cmakeFlagsMap.collect { /$it.key=$it.value/ } join ' '
         }
 
