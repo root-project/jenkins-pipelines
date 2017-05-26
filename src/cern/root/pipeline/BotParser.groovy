@@ -50,6 +50,7 @@ class BotParser implements Serializable {
         this.extraCMakeOptions = defaultExtraCMakeOptions
     }
 
+    @NonCPS
     private def appendFlagsToMap(flags, map) {
         def parsedCompilerFlags = flags.split(' ')
         for (unparsedFlag in parsedCompilerFlags) {
