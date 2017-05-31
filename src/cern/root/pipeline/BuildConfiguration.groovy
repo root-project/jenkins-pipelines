@@ -7,6 +7,7 @@ class BuildConfiguration {
     /**
      * @return The available platforms/labels that can be used.
      */
+    @NonCPS
     static def getAvailablePlatforms() {
         return ['centos7', 'mac1011', 'slc6', 'ubuntu14', 'mac1012']
     }
@@ -14,6 +15,7 @@ class BuildConfiguration {
     /**
      * @return The available compilers that can be used.
      */
+    @NonCPS
     static def getAvailableCompilers() {
         return ['gcc49', 'gcc62', 'native', 'clang_gcc52', 'clang_gcc62']
     }
@@ -47,6 +49,7 @@ class BuildConfiguration {
      * @param platform Platform to check.
      * @return True if recognized, otherwise false.
      */
+    @NonCPS
     static boolean recognizedPlatform(String compiler, String platform) {
         return getAvailableCompilers().contains(compiler) && getAvailablePlatforms().contains(platform)
     }
