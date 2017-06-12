@@ -82,6 +82,11 @@ class BotParser implements Serializable {
             overrideDefaultConfiguration = matcher.group('overrideDefaultConfiguration').equals('just')
             matrix = matcher.group('matrix')
             flags = matcher.group('flags')
+
+            // If we specify a build configuration without "also on ...", only build on those platforms
+            if (matrix != null && matcher.group('overrideDefaultConfiguration') == null) {
+                overrideDefaultConfiguration = false
+            }
         }
 
         return parsableComment
@@ -161,8 +166,10 @@ class BotParser implements Serializable {
             commentResponse.replace(commentResponse.length() - 2, commentResponse.length(), ' ')
 
             if (extraCMakeOptions != null && extraCMakeOptions.size() > 0) {
-                commentResponse.append("with CMake flags `$extraCMakeOptions`")
+                commentResponse.append("with flags `$extraCMakeOptions`")
             }
+
+            commentResponse.append("\n[How to customize builds](https://github.com/phsft-bot/build-configuration/blob/master/README.md)")
 
             gitHub.postComment(commentResponse.toString())
         }
