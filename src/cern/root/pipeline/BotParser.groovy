@@ -52,16 +52,17 @@ class BotParser implements Serializable {
 
     @NonCPS
     private def appendFlagsToMap(flags, map) {
-        def parsedCompilerFlags = flags.split(' ')
-        for (unparsedFlag in parsedCompilerFlags) {
-            if (unparsedFlag.contains('=')) {
-                def flag = unparsedFlag.split('=')
+        def pattern = Pattern.compile('([a-zA-Z0-9_-]+)=([a-zA-Z0-9_-]+|(("|\')[^"]*("|\')))')
+        def matcher = pattern.matcher(flags)
 
-                if (map.containsKey(flag[0])) {
-                    map[flag[0]] = flag[1]
-                } else {
-                    map.put(flag[0], flag[1])
-                }
+        while (matcher.find()) {
+            def key = matcher.group(1)
+            def value = matcher.group(2)
+
+            if (map.containsKey(key)) {
+                map[key] = value
+            } else {
+                map.put(key, value)
             }
         }
     }
