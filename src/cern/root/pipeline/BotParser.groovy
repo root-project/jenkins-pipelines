@@ -11,7 +11,7 @@ class BotParser implements Serializable {
     private boolean parsableComment
     private String matrix
     private String flags
-    private static final String COMMENT_REGEX = 'build ((?<overrideDefaultConfiguration>just|also) on (?<matrix>([a-z0-9_]*\\/[a-z0-9_]*,?\\s?)*))?(with flags (?<flags>.*))?'
+    private static final String COMMENT_REGEX = 'build (((?<overrideDefaultConfiguration>just|also)\\s)?on (?<matrix>([a-z0-9_]*\\/[a-z0-9_]*,?\\s?)*))?(with flags (?<flags>.*))?'
     private def script
 
     /**
@@ -84,9 +84,9 @@ class BotParser implements Serializable {
             matrix = matcher.group('matrix')
             flags = matcher.group('flags')
 
-            // If we specify a build configuration without "also on ...", only build on those platforms
+            // If we specify a build configuration without "also/just on ...", only build on those platforms
             if (matrix != null && matcher.group('overrideDefaultConfiguration') == null) {
-                overrideDefaultConfiguration = false
+                overrideDefaultConfiguration = true
             }
         }
 

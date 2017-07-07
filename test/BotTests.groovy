@@ -26,6 +26,13 @@ assert(parser.overrideDefaultConfiguration)
 assertConfiguration(parser.validBuildConfigurations, [[compiler: 'gcc49', platform: 'mac1011']])
 
 
+// Assert default build config is discarded
+parser = new BotParser(this, "")
+assert(parser.isParsableComment("@phsft-bot build on mac1011/gcc49"))
+parser.parse()
+assert(parser.overrideDefaultConfiguration)
+assertConfiguration(parser.validBuildConfigurations, [[compiler: 'gcc49', platform: 'mac1011']])
+
 // Bot should run default build with no recognizable command
 parser = new BotParser(this, "")
 assert(!parser.isParsableComment("@phsft-bot build!"))
