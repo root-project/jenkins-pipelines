@@ -17,7 +17,7 @@ class BuildConfiguration {
      */
     @NonCPS
     static def getAvailableCompilers() {
-        return ['gcc49', 'gcc62', 'native', 'clang_gcc52', 'clang_gcc62', 'icc15', 'icc17']
+        return ['gcc49', 'gcc62', 'native', 'clang_gcc52', 'clang_gcc62', 'icc15', 'icc17', 'classic']
     }
 
     /**
