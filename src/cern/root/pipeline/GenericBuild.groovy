@@ -165,6 +165,7 @@ class GenericBuild implements Serializable {
     void cancelBuilds(String pattern) {
         script.currentBuild.rawBuild.parent.builds.each { run ->
             if (run.number != script.currentBuild.number && run.displayName.matches(pattern) && run.isBuilding()) {
+                script.println "Aborting build #${run.number}"
                 run.executor.interrupt(Result.ABORTED);
             }
         }
