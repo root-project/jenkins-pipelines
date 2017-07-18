@@ -106,8 +106,9 @@ class BotParser implements Serializable {
 
             for (unparsedPattern in patterns) {
                 def patternArgs = unparsedPattern.split('/')
-                def compiler = patternArgs[1]
                 def platform = patternArgs[0]
+                def compiler = patternArgs[1]
+                
 
                 script.println "Received label $platform with compiler $compiler"
 
@@ -154,12 +155,12 @@ class BotParser implements Serializable {
             commentResponse.append('Starting build on ')
 
             for (config in validBuildConfigurations) {
-                commentResponse.append('`' + config.compiler + '`/`' + config.platform + '`, ')
+                commentResponse.append('`' + config.platform + '`/`' + config.compiler + '`, ')
             }
 
             if (!overrideDefaultConfiguration) {
                 for (config in BuildConfiguration.getPullrequestConfiguration()) {
-                    commentResponse.append('`' + config.compiler + '`/`' + config.label + '`, ')
+                    commentResponse.append('`' + config.label + '`/`' + config.compiler + '`, ')
                 }
             }
 
