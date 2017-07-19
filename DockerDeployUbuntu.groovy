@@ -17,7 +17,7 @@ node('docker-host') {
         
         dir('ubuntu16') {
             try {
-                def ccacheVolumeName = 'root-ccache-ubuntu16-native-Release-master'
+                def ccacheVolumeName = "root-ccache-ubuntu16-native-Release-$branch"
                 stage('Build') {
                     dir('root-build') {
                         dir('roottest') {
