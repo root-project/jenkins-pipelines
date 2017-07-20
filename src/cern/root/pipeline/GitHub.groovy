@@ -94,7 +94,7 @@ class GitHub implements Serializable {
 
         def maxMessages = 10
 
-        if (logParserAction?.result.totalErrors > 0) {
+        if (logParserAction?.result?.totalErrors > 0) {
             commentBuilder.append("### Errors:\n")
             def ignoredMessages = 0
             def totalMessages = 0
@@ -124,7 +124,7 @@ class GitHub implements Serializable {
             commentBuilder.append("\n")
         }
 
-        if (logParserAction?.result.totalWarnings > 0) {
+        if (logParserAction?.result?.totalWarnings > 0) {
             commentBuilder.append("### Warnings:\n")
             def ignoredMessages = 0
             def totalMessages = 0
