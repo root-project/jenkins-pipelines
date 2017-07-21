@@ -26,17 +26,23 @@ node(LABEL) {
     timestamps {
         stage('Checkout') {
             dir('root') {
-                // TODO: Use the git step when it has implemented specifying refspecs
-                checkout([$class: 'GitSCM', branches: [[name: ROOT_BRANCH]], doGenerateSubmoduleConfigurations: false, extensions: [],
-                        submoduleCfg: [], userRemoteConfigs: [[refspec: ROOT_REFSPEC, url: env.GIT_URL]]])
+                retry(3) {
+                    // TODO: Use the git step when it has implemented specifying refspecs
+                    checkout([$class: 'GitSCM', branches: [[name: ROOT_BRANCH]], doGenerateSubmoduleConfigurations: false, extensions: [],
+                            submoduleCfg: [], userRemoteConfigs: [[refspec: ROOT_REFSPEC, url: env.GIT_URL]]])
+                }
             }
 
             dir('roottest') {
-                git url: 'https://github.com/root-project/roottest.git', branch: ROOTTEST_BRANCH
+                retry(3) {
+                    git url: 'https://github.com/root-project/roottest.git', branch: ROOTTEST_BRANCH
+                }
             }
 
             dir('rootspi') {
-                git url: 'https://github.com/root-project/rootspi.git'
+                retry(3) {
+                    git url: 'https://github.com/root-project/rootspi.git'
+                }
             }
         }
 
