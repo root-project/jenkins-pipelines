@@ -26,7 +26,7 @@ node(LABEL) {
     timestamps {
         stage('Checkout') {
             dir('root') {
-                retry(3) {
+                retry(3) {
                     // TODO: Use the git step when it has implemented specifying refspecs
                     checkout([$class: 'GitSCM', branches: [[name: ROOT_BRANCH]], doGenerateSubmoduleConfigurations: false, extensions: [],
                             submoduleCfg: [], userRemoteConfigs: [[refspec: ROOT_REFSPEC, url: env.GIT_URL]]])
