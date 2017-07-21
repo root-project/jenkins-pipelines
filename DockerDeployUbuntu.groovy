@@ -30,6 +30,7 @@ node('docker-host') {
                     sh "docker pull rootproject/root-ubuntu16-base"
                     sh "docker build -t $stagingName ."
                     sh "HOME=\$(pwd) && docker run -t --name='$stagingName' -v $ccacheVolumeName:/ccache -v \$(pwd)/root-build:/root-build $stagingName /build.sh ubuntu16 native Release $branch"
+                    sh "HOME=\$(pwd) && docker diff $stagingName"
                 }
             
                 stage('Push') {
