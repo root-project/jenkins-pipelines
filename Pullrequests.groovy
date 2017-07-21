@@ -35,7 +35,7 @@ currentBuild.setDisplayName("#$BUILD_NUMBER PR #$ghprbPullId")
 build.cancelBuilds('.*PR #' + ghprbPullId + '$')
 
 build.afterBuild({buildWrapper -> 
-    if (buildWrapper.result.result != 'SUCCESS') {
+    if (buildWrapper.result.result != 'SUCCESS' && currentBuild.result != 'ABORTED') {
         gitHub.postResultComment(buildWrapper)
     }
 })
@@ -54,7 +54,7 @@ build.build()
 stage('Publish reports') {
     if (currentBuild.result == 'SUCCESS') {
         gitHub.setSucceedCommitStatus('Build passed')
-    } else {
+    } else if (currentBuild.result != 'ABORTED') {
         gitHub.setFailedCommitStatus('Build failed')
     }
 
