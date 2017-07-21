@@ -1,12 +1,5 @@
 #!groovy
 
-properties([
-    parameters([
-        string(name: 'tag', defaultValue: 'snapshot', description: 'Tag for the Docker image'),
-        string(name: 'branch', defaultValue: 'master', description: 'Branch to build ROOT from')
-    ])
-])
-
 def username = 'rootprojectsftnight'
 def repoName = 'rootproject/root-ubuntu16'
 
