@@ -75,6 +75,8 @@ class BotParser implements Serializable {
      */
     @NonCPS
     boolean isParsableComment(comment) {
+        comment = comment.replace('\\\"', '\"')
+
         def matcher = Pattern.compile(COMMENT_REGEX).matcher(comment)
 
         parsableComment = matcher.find()

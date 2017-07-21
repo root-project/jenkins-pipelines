@@ -133,4 +133,10 @@ assert(gitHub.postedComment.size() > 0)
 assert(gitHub.postedComment.contains("-Dfoo=bar"))
 
 
+// ensure " is not double escaped
+parser = new BotParser(this, "")
+assert(parser.isParsableComment("@phsft-bot build with flags -DCMAKE_CXX_FLAGS=\\\"-DR__COMPLETE_MEM_TERMINATION\\\" -Dccache=OFF"))
+parser.parse()
+assert(parser.extraCMakeOptions == "-DCMAKE_CXX_FLAGS=\"-DR__COMPLETE_MEM_TERMINATION\" -Dccache=OFF")
+
 println 'All tests passing'
