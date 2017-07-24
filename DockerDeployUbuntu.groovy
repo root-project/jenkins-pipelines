@@ -30,13 +30,10 @@ node('docker-host') {
                     sh "docker pull rootproject/root-ubuntu16-base"
                     sh "docker build -t $stagingName ."
                     sh "HOME=\$(pwd) && docker run -t --name='$stagingName' -v $ccacheVolumeName:/ccache -v \$(pwd)/root-build:/root-build $stagingName /build.sh ubuntu16 native Release $branch"
-                    sh "HOME=\$(pwd) && docker diff $stagingName"
                 }
             
                 stage('Push') {
                     sh "HOME=\$(pwd) && docker commit --change='CMD [\"root.exe\"]' $stagingName '$repoName:$tag'"                
-                    sh "HOME=\$(pwd) && docker run -t --rm '$repoName:$tag' ls -als /usr/lib/python2.7/plat-x86_64-linux-gnu/"
-                    
                     withCredentials([string(credentialsId: 'DOCKERHUB_ROOTPROJECT_PASSWORD', variable: 'password')]) {
                         sh "HOME=\$(pwd) && docker login -u '$username' -p '$password'"
                     }
