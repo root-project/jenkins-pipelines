@@ -30,6 +30,17 @@ node('docker-host') {
                     sh "docker pull rootproject/root-ubuntu16-base"
                     sh "docker build -t $stagingName ."
                     sh "HOME=\$(pwd) && docker run -t --name='$stagingName' -v $ccacheVolumeName:/ccache -v \$(pwd)/root-build:/root-build $stagingName /build.sh ubuntu16 native Release $branch"
+
+                    def testThreshold = [[$class: 'FailedThreshold', 
+                            failureNewThreshold: '0', failureThreshold: '0', unstableNewThreshold: '0', 
+                            unstableThreshold: '0'], [$class: 'SkippedThreshold', failureNewThreshold: '', 
+                            failureThreshold: '', unstableNewThreshold: '', unstableThreshold: '']]
+
+                    step([$class: 'XUnitBuilder', 
+                            testTimeMargin: '3000', thresholdMode: 1, thresholds: testThreshold, 
+                            tools: [[$class: 'CTestType', 
+                                    deleteOutputFiles: true, failIfNotNew: false, pattern: 'root-build/build/Testing/*/Test.xml', 
+                                    skipNoTestFiles: false, stopProcessingIfError: true]]])
                 }
             
                 stage('Push') {
@@ -43,9 +54,9 @@ node('docker-host') {
             }
             finally {
                 // Remove containers/cleanup
+                sh "HOME=\$(pwd) && docker rm -f \$(docker ps -a -f name=$stagingName -q)"
                 sh "HOME=\$(pwd) && docker rmi -f $stagingName"
                 sh "HOME=\$(pwd) && docker rmi -f $repoName:$tag"
-                sh "HOME=\$(pwd) && docker rm -f \$(docker ps -a -f name=$stagingName -q)"
             }
         }
     }
