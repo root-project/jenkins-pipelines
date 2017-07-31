@@ -41,6 +41,10 @@ node('docker-host') {
                             tools: [[$class: 'CTestType', 
                                     deleteOutputFiles: true, failIfNotNew: false, pattern: 'root-build/build/Testing/*/Test.xml', 
                                     skipNoTestFiles: false, stopProcessingIfError: true]]])
+
+                    if (currentBuild.result == 'FAILURE') {
+                        throw new Exception("Test results failed the build")
+                    }
                 }
             
                 stage('Push') {
