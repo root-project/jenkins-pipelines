@@ -195,6 +195,6 @@ class BotParser implements Serializable {
             build.addConfigurations(BuildConfiguration.getPullrequestConfiguration())
         }
 
-        script.env.ExtraCMakeOptions = extraCMakeOptions
+        build.addBuildParameter('ExtraCMakeOptions', extraCMakeOptions)
     }
 }
