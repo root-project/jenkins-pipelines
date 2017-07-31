@@ -39,7 +39,7 @@ node('docker-host') {
                     step([$class: 'XUnitBuilder', 
                             testTimeMargin: '3000', thresholdMode: 1, thresholds: testThreshold, 
                             tools: [[$class: 'CTestType', 
-                                    deleteOutputFiles: true, failIfNotNew: false, pattern: 'root-build/build/Testing/*/Test.xml', 
+                                    deleteOutputFiles: true, failIfNotNew: false, pattern: 'root-build/Testing/*/Test.xml', 
                                     skipNoTestFiles: false, stopProcessingIfError: true]]])
 
                     if (currentBuild.result == 'FAILURE') {
