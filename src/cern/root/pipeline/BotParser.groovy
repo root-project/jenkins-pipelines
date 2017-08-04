@@ -145,7 +145,7 @@ class BotParser implements Serializable {
             def unrecognizedPlatforms = new StringBuilder()
 
             for (config in invalidBuildConfigurations) {
-                unrecognizedPlatforms.append('`' + config.compiler + '`/`' + config.platform + '`, ')
+                unrecognizedPlatforms.append('`' + config.platform + '`/`' + config.compiler + '`, ')
             }
 
             unrecognizedPlatforms.replace(unrecognizedPlatforms.length() - 2, unrecognizedPlatforms.length(), ' ')
