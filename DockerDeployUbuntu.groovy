@@ -6,9 +6,9 @@ def repoName = 'rootproject/root-ubuntu16'
 node('docker-host') {
     timestamps {
         def stagingName = "rootbuild-${java.util.UUID.randomUUID()}"
-        git 'https://github.com/martinmine/ROOT-Docker.git'
+        git 'https://github.com/root-project/rootspi.git'
         
-        dir('ubuntu16') {
+        dir('docker/ubuntu16') {
             try {
                 def ccacheVolumeName = "root-ccache-ubuntu16-native-Release-$branch"
                 stage('Build') {
