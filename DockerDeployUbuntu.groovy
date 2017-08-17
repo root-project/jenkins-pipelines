@@ -54,6 +54,11 @@ node('docker-host') {
                     }
                 
                     sh "HOME=\$(pwd) && docker push $repoName:$tag"
+
+                    if (params['latestTag']) {
+                        sh "HOME=\$(pwd) && docker tag $repoName:$tag $repoName:latest"
+                        sh "HOME=\$(pwd) && docker push $repoName:latest"
+                    }
                 }
             }
             finally {
