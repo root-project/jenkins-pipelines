@@ -3,6 +3,7 @@
 properties([
     parameters([
         string(name: 'ROOT_REFSPEC', defaultValue: '', description: 'Refspec for ROOT repository'),
+        string(name: 'ROOTTEST_REFSPEC', defaultValue: '', description: 'Refspec for ROOTtest repository'),
         string(name: 'ROOTTEST_BRANCH', defaultValue: 'master', description: 'Name of the ROOT branch to work with'),
         string(name: 'ROOT_BRANCH', defaultValue: 'master', description: 'Name of the roottest branch to work with'),
         string(name: 'BUILD_NOTE', defaultValue: '', description: 'Note to add after label/compiler in job name'),
@@ -35,7 +36,10 @@ node(LABEL) {
 
             dir('roottest') {
                 retry(3) {
-                    git url: 'https://github.com/root-project/roottest.git', branch: ROOTTEST_BRANCH
+                    def rootTestUrl = 'https://github.com/root-project/roottest.git';
+                    // TODO: Use the git step when it has implemented specifying refspecs
+                    checkout([$class: 'GitSCM', branches: [[name: ROOTTEST_BRANCH]], doGenerateSubmoduleConfigurations: false, extensions: [],
+                            submoduleCfg: [], userRemoteConfigs: [[refspec: ROOTTEST_REFSPEC, url: rootTestUrl]]])
                 }
             }
 
