@@ -29,7 +29,7 @@ node('docker-host') {
                     sh "docker volume create $ccacheVolumeName"
                     sh "docker pull rootproject/root-ubuntu16-base"
                     sh "docker build -t $stagingName --build-arg uid=\$(id -u \$USER) ."
-                    sh "HOME=\$(pwd) && docker run -t --name='$stagingName' -v $ccacheVolumeName:/ccache -v \$(pwd)/root-build:/root-build $stagingName /build.sh ubuntu16 native Release $branch"
+                    sh "HOME=\$(pwd) && docker run -t --name='$stagingName' -v $ccacheVolumeName:/ccache -v \$(pwd)/root-build:/root-build $stagingName /build.sh ubuntu16 native Release"
 
                     def testThreshold = [[$class: 'FailedThreshold', 
                             failureNewThreshold: '0', failureThreshold: '0', unstableNewThreshold: '0', 
