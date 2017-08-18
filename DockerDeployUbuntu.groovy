@@ -28,7 +28,7 @@ node('docker-host') {
                     
                     sh "docker volume create $ccacheVolumeName"
                     sh "docker pull rootproject/root-ubuntu16-base"
-                    sh "docker build -t $stagingName --build-arg uid=\$(id -u \$USER) --build-arg gid=\$(id -g \$USER) ."
+                    sh "docker build -t $stagingName --build-arg uid=\$(id -u \$USER) ."
                     sh "HOME=\$(pwd) && docker run -t --name='$stagingName' -v $ccacheVolumeName:/ccache -v \$(pwd)/root-build:/root-build $stagingName /build.sh ubuntu16 native Release $branch"
 
                     def testThreshold = [[$class: 'FailedThreshold', 
