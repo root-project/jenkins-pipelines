@@ -20,45 +20,47 @@ properties([
     ])
 ])
 
-GitHub gitHub = new GitHub(this, PARENT, ghprbGhRepository, ghprbPullId, params.ghprbActualCommit)
-BotParser parser = new BotParser(this, params.ExtraCMakeOptions)
-GenericBuild build = new GenericBuild(this, 'roottest-pullrequests-build', params.MODE)
+timestamps {
+    GitHub gitHub = new GitHub(this, PARENT, ghprbGhRepository, ghprbPullId, params.ghprbActualCommit)
+    BotParser parser = new BotParser(this, params.ExtraCMakeOptions)
+    GenericBuild build = new GenericBuild(this, 'roottest-pullrequests-build', params.MODE)
 
-build.addBuildParameter('ROOTTEST_REFSPEC', '+refs/pull/*:refs/remotes/origin/pr/*')
-build.addBuildParameter('ROOTTEST_BRANCH', "origin/pr/${ghprbPullId}/merge")
-build.addBuildParameter('ROOT_BRANCH', "${params.ghprbTargetBranch}")
-build.addBuildParameter('GIT_COMMIT', "${params.sha1}")
-build.addBuildParameter('BUILD_NOTE', "PR #$ghprbPullId")
+    build.addBuildParameter('ROOTTEST_REFSPEC', '+refs/pull/*:refs/remotes/origin/pr/*')
+    build.addBuildParameter('ROOTTEST_BRANCH', "origin/pr/${ghprbPullId}/merge")
+    build.addBuildParameter('ROOT_BRANCH', "${params.ghprbTargetBranch}")
+    build.addBuildParameter('GIT_COMMIT', "${params.sha1}")
+    build.addBuildParameter('BUILD_NOTE', "PR #$ghprbPullId")
 
-currentBuild.setDisplayName("#$BUILD_NUMBER PR #$ghprbPullId")
+    currentBuild.setDisplayName("#$BUILD_NUMBER PR #$ghprbPullId")
 
-build.cancelBuilds('.*PR #' + ghprbPullId + '$')
+    build.cancelBuilds('.*PR #' + ghprbPullId + '$')
 
-build.afterBuild({buildWrapper -> 
-    if (buildWrapper.result.result != 'SUCCESS' && currentBuild.result != 'ABORTED') {
-        gitHub.postResultComment(buildWrapper)
-    }
-})
+    build.afterBuild({buildWrapper -> 
+        if (buildWrapper.result.result != 'SUCCESS' && currentBuild.result != 'ABORTED') {
+            gitHub.postResultComment(buildWrapper)
+        }
+    })
 
-if (parser.isParsableComment(ghprbCommentBody.trim())) {
-    parser.parse()
-}
-
-parser.postStatusComment(gitHub)
-parser.configure(build)
-
-gitHub.setPendingCommitStatus('Building')
-
-build.build()
-
-stage('Publish reports') {
-    if (currentBuild.result == 'SUCCESS') {
-        gitHub.setSucceedCommitStatus('Build passed')
-    } else if (currentBuild.result != 'ABORTED') {
-        gitHub.setFailedCommitStatus('Build failed')
+    if (parser.isParsableComment(ghprbCommentBody.trim())) {
+        parser.parse()
     }
 
-    if (currentBuild.result != null) {
-        build.sendEmails()
+    parser.postStatusComment(gitHub)
+    parser.configure(build)
+
+    gitHub.setPendingCommitStatus('Building')
+
+    build.build()
+
+    stage('Publish reports') {
+        if (currentBuild.result == 'SUCCESS') {
+            gitHub.setSucceedCommitStatus('Build passed')
+        } else if (currentBuild.result != 'ABORTED') {
+            gitHub.setFailedCommitStatus('Build failed')
+        }
+
+        if (currentBuild.result != null) {
+            build.sendEmails()
+        }
     }
 }
