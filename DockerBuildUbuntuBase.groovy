@@ -1,7 +1,5 @@
 #!groovy
 
-def username = 'rootprojectsftnight'
-
 node('docker-host') {
     timestamps {
         git 'https://github.com/root-project/rootspi.git'
@@ -12,7 +10,7 @@ node('docker-host') {
             }
         
             stage('Push') {
-                withCredentials([string(credentialsId: 'DOCKERHUB_ROOTPROJECT_PASSWORD', variable: 'password')]) {
+                withCredentials([usernamePassword(credentialsId: 'root_dockerhub_deploy_user', passwordVariable: 'password', usernameVariable: 'username')]) {
                     sh "HOME=\$(pwd) && docker login -u '$username' -p '$password'"
                 }
             

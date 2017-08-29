@@ -1,6 +1,5 @@
 #!groovy
 
-def username = 'rootprojectsftnight'
 def repoName = 'rootproject/root-ubuntu16'
 
 node('docker-host') {
@@ -49,7 +48,7 @@ node('docker-host') {
             
                 stage('Push') {
                     sh "HOME=\$(pwd) && docker commit --change='CMD [\"root.exe\"]' $stagingName '$repoName:$tag'"                
-                    withCredentials([string(credentialsId: 'DOCKERHUB_ROOTPROJECT_PASSWORD', variable: 'password')]) {
+                    withCredentials([usernamePassword(credentialsId: 'root_dockerhub_deploy_user', passwordVariable: 'password', usernameVariable: 'username')]) {
                         sh "HOME=\$(pwd) && docker login -u '$username' -p '$password'"
                     }
                 
