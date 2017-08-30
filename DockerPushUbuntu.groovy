@@ -59,8 +59,11 @@ node('docker-host') {
                         sh "HOME=\$(pwd) && docker push $repoName:latest"
                     }
                 }
-            }
-            finally {
+            } catch (e) {
+                println 'Build failed because:'
+                println e
+                currentBuild.result = 'FAILURE'
+            } finally {
                 // Remove containers/cleanup
                 sh "HOME=\$(pwd) && docker rm -f \$(docker ps -a -f name=$stagingName -q)"
                 sh "HOME=\$(pwd) && docker rmi -f $stagingName"
