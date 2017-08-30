@@ -65,6 +65,16 @@ node('docker-host') {
                 sh "HOME=\$(pwd) && docker rm -f \$(docker ps -a -f name=$stagingName -q)"
                 sh "HOME=\$(pwd) && docker rmi -f $stagingName"
                 sh "HOME=\$(pwd) && docker rmi -f $repoName:$tag"
+
+                // Build back to green
+                if (currentBuild.result == 'SUCCESS' && currentBuild.previousBuild?.result != 'SUCCESS') {
+                    mattermostSend color: 'good', message: 'Docker build is back to green!'
+                }
+
+                // Build just failed
+                if (currentBuild.result != 'SUCCESS' && currentBuild.previousBuild?.result == 'SUCCESS') {
+                    mattermostSend color: 'danger', message: "Docker build [just failed](${currentBuild.absoluteUrl})"
+                }
             }
         }
     }
