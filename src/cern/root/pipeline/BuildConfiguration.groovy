@@ -9,7 +9,7 @@ class BuildConfiguration {
      */
     @NonCPS
     static def getAvailablePlatforms() {
-        return ['centos7', 'mac1011', 'slc6', 'ubuntu14', 'mac1012', 'ubuntu16', 'arm64', 'fedora25']
+        return ['centos7', 'mac1011', 'slc6', 'slc6-i686', 'ubuntu14', 'mac1012', 'ubuntu16', 'arm64', 'fedora25']
     }
 
     /**
