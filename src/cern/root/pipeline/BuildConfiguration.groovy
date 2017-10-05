@@ -29,7 +29,9 @@ class BuildConfiguration {
             [label: 'mac1012', compiler: 'native', buildType: 'Debug'],
             [label: 'slc6', compiler: 'gcc49', buildType: 'Debug'],
             [label: 'slc6', compiler: 'gcc62', buildType: 'Debug'],
-            [label: 'ubuntu14', compiler: 'native', buildType: 'Debug']
+            [label: 'slc6', compiler: 'gcc62', buildType: 'Release'],
+            [label: 'ubuntu14', compiler: 'native', buildType: 'Debug'],
+            [label: 'ubuntu14', compiler: 'native', buildType: 'Release']
         ]
     }
 
