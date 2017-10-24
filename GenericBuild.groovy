@@ -52,7 +52,11 @@ node(LABEL) {
 
         try {
             stage('Build') {
-                sh 'rootspi/jenkins/jk-all build'
+                if (LABEL == 'windows10') {
+                    call 'rootspi/jenkins/jk-all.bat'
+                } else {
+                    sh 'rootspi/jenkins/jk-all build'
+                }
             }
 
             stage('Test') {
