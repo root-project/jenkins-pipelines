@@ -9,7 +9,7 @@ class BuildConfiguration {
      */
     @NonCPS
     static def getAvailablePlatforms() {
-        return ['centos7', 'mac1011', 'slc6', 'slc6-i686', 'ubuntu14', 'mac1012', 'ubuntu16', 'arm64', 'fedora25']
+        return ['centos7', 'mac1011', 'slc6', 'slc6-i686', 'ubuntu14', 'mac1012', 'ubuntu16', 'arm64', 'fedora25', 'windows10']
     }
 
     /**
@@ -17,7 +17,7 @@ class BuildConfiguration {
      */
     @NonCPS
     static def getAvailableCompilers() {
-        return ['gcc49', 'gcc62', 'native', 'clang_gcc52', 'clang_gcc62', 'icc15', 'icc17', 'classic']
+        return ['gcc49', 'gcc62', 'native', 'clang_gcc52', 'clang_gcc62', 'icc15', 'icc17', 'classic', 'vc15']
     }
 
     /**
