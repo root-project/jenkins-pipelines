@@ -81,4 +81,5 @@ node('docker-host') {
             }
         }
     }
+    cleanWs()
 }
