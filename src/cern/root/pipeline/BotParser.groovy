@@ -11,8 +11,7 @@ class BotParser implements Serializable {
     private boolean parsableComment
     private String matrix
     private String flags
-    private String externals
-    private static final String COMMENT_REGEX = 'build (((?<overrideDefaultConfiguration>just|also)\\s)?on (?<matrix>([a-z0-9_]*\\/[a-z0-9_]*,?\\s?)*))?(with externals <externals>([a-z0-9_]*)\\s)?(with flags (?<flags>.*))?'
+    private static final String COMMENT_REGEX = 'build (((?<overrideDefaultConfiguration>just|also)\\s)?on (?<matrix>([a-z0-9_]*\\/[a-z0-9_]*,?\\s?)*))?(with flags (?<flags>.*))?'
     private def script
 
     /**
@@ -86,7 +85,6 @@ class BotParser implements Serializable {
             overrideDefaultConfiguration = matcher.group('overrideDefaultConfiguration').equals('just')
             matrix = matcher.group('matrix')
             flags = matcher.group('flags')
-            externals = matcher.group('externals')
 
             // If we specify a build configuration without "also/just on ...", only build on those platforms
             if (matrix != null && matcher.group('overrideDefaultConfiguration') == null) {
@@ -112,7 +110,7 @@ class BotParser implements Serializable {
                 def patternArgs = unparsedPattern.split('/')
                 def platform = patternArgs[0]
                 def compiler = patternArgs[1]
-
+                
 
                 script.println "Received label $platform with compiler $compiler"
 
@@ -132,14 +130,9 @@ class BotParser implements Serializable {
             extraCMakeOptions = cmakeFlagsMap.collect { /$it.key=$it.value/ } join ' '
         }
 
-        if (externals == null) {
-            externals = "ROOT-latest"
-        }
-
         script.println "ExtraCMakeOptions set to $extraCMakeOptions"
         script.println "Add default matrix config: $overrideDefaultConfiguration"
         script.println "CMake flags: $flags"
-        script.println "Externals: $externals"
     }
 
     /**
@@ -203,6 +196,5 @@ class BotParser implements Serializable {
         }
 
         build.addBuildParameter('ExtraCMakeOptions', extraCMakeOptions)
-        build.addBuildParameter('EXTERNALS', externals)
     }
 }
