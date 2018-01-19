@@ -54,14 +54,14 @@ class BuildConfiguration {
      */
     static def getPullrequestConfiguration() {
         return [
-            [label: 'centos7', compiler: 'gcc49', buildType: 'Debug'],
-            [label: 'mac1012', compiler: 'native', buildType: 'Debug'],
-            [label: 'slc6', compiler: 'gcc49', buildType: 'Debug'],
-            [label: 'slc6', compiler: 'gcc62', buildType: 'Debug'],
-            [label: 'slc6', compiler: 'gcc62', buildType: 'Release'],
-            [label: 'ubuntu14', compiler: 'native', buildType: 'Debug'],
-            [label: 'ubuntu14', compiler: 'native', buildType: 'Release'],
-            [label: 'windows10', compiler: 'vc15', buildType: 'Release']
+            [label: 'centos7',   compiler: 'gcc49',  buildType: 'Release' ],
+            [label: 'mac1013',   compiler: 'native', buildType: 'Release' ],
+            [label: 'slc6',      compiler: 'gcc49',  buildType: 'Release' ],
+            [label: 'slc6',      compiler: 'gcc62',  buildType: 'Debug'   ],
+            [label: 'slc6',      compiler: 'gcc62',  buildType: 'Release' ],
+            [label: 'ubuntu16',  compiler: 'native', buildType: 'Debug'   ],
+            [label: 'ubuntu16',  compiler: 'native', buildType: 'Release' ],
+            [label: 'windows10', compiler: 'vc15',   buildType: 'Release' ]
         ]
     }
 
@@ -71,7 +71,7 @@ class BuildConfiguration {
     static def getIncrementalConfiguration() {
         return [
             [label: 'centos7', compiler: 'gcc62', buildType: 'Debug'],
-            [label: 'slc6', compiler: 'gcc62', buildType: 'Debug']
+            [label: 'slc6',    compiler: 'gcc62', buildType: 'Debug']
         ]
     }
 
