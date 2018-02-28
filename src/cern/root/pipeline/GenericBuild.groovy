@@ -40,7 +40,7 @@ class GenericBuild implements Serializable {
         addBuildParameter('ROOTTEST_BRANCH', script.params.VERSION)
     }
 
-    private def performBuild(label, compiler, buildType) {
+    private def performBuild(label, compiler, buildType, opts) {
         def jobParameters = []
 
         // Copy parameters from build parameters
@@ -51,6 +51,7 @@ class GenericBuild implements Serializable {
         jobParameters << script.string(name: 'LABEL', value: label)
         jobParameters << script.string(name: 'COMPILER', value: compiler)
         jobParameters << script.string(name: 'BUILDTYPE', value: buildType)
+        jobParameters << script.string(name: 'ExtraCMakeOptions', value: opts)
 
         def result = script.build job: jobName, parameters: jobParameters, propagate: false
         def resultWrapper = [result: result, label: label, compiler: compiler, buildType: buildType]
@@ -75,12 +76,12 @@ class GenericBuild implements Serializable {
      * @param compiler Compiler to build on, e.g. gcc62.
      * @param buildType Build type, e.g. Debug.
      */
-    void buildOn(label, compiler, buildType) {
+    void buildOn(label, compiler, buildType, opts) {
         script.println "Preparing build on $label"
         def configurationLabel = "$label-$compiler-$buildType"
         configuration[configurationLabel] = { 
             script.stage("Build - $configurationLabel") {
-                performBuild(label, compiler, buildType) 
+                performBuild(label, compiler, buildType, opts)
             }
         }
     }
@@ -91,7 +92,7 @@ class GenericBuild implements Serializable {
      */
     void addConfigurations(configs) {
         for (config in configs) {
-            buildOn(config.label, config.compiler, config.buildType)
+            buildOn(config.label, config.compiler, config.buildType, config.opts)
         }
     }
 

@@ -15,6 +15,7 @@ class BuildConfiguration {
             'fedora25',
             'fedora26',
             'fedora27',
+            'fedora28',
             'mac1011',
             'mac1012',
             'mac1013',
@@ -22,6 +23,8 @@ class BuildConfiguration {
             'slc6-i686',
             'ubuntu14',
             'ubuntu16',
+            'ubuntu17',
+            'ubuntu18',
             'windows10'
         ]
     }
@@ -54,17 +57,17 @@ class BuildConfiguration {
      */
     static def getPullrequestConfiguration() {
         return [
-            [label: 'slc6',      compiler: 'clang39', buildType: 'Release' ],
-            [label: 'slc6',      compiler: 'gcc48',   buildType: 'Debug'   ],
-            [label: 'slc6',      compiler: 'gcc48',   buildType: 'Release' ],
-            [label: 'slc6',      compiler: 'gcc49',   buildType: 'Release' ],
-            [label: 'slc6',      compiler: 'gcc52',   buildType: 'Release' ],
-            [label: 'centos7',   compiler: 'gcc62',   buildType: 'Release' ],
-            [label: 'centos7',   compiler: 'gcc7',    buildType: 'Debug'   ],
-            [label: 'centos7',   compiler: 'gcc7',    buildType: 'Release' ],
-            [label: 'ubuntu16',  compiler: 'native',  buildType: 'Release' ],
-            [label: 'mac1013',   compiler: 'native',  buildType: 'Release' ],
-            [label: 'windows10', compiler: 'vc15',    buildType: 'Release' ]
+            [label: 'slc6',      compiler: 'gcc48',   buildType: 'Release', opts: ''                        ],
+            [label: 'slc6-i686', compiler: 'gcc49',   buildType: 'Release', opts: ''                        ],
+            [label: 'centos7',   compiler: 'clang39', buildType: 'Release', opts: ''                        ],
+            [label: 'centos7',   compiler: 'gcc62',   buildType: 'Release', opts: '-Dcxx14=ON'              ],
+            [label: 'centos7',   compiler: 'gcc7',    buildType: 'Debug'  , opts: '-Dcxx17=ON'              ],
+            [label: 'centos7',   compiler: 'gcc7',    buildType: 'Release', opts: '-Dcxx17=ON'              ],
+            [label: 'centos7',   compiler: 'gcc7',    buildType: 'Release', opts: '-Druntime_cxxmodules=ON' ],
+            [label: 'fedora28',  compiler: 'native',  buildType: 'Release', opts: '-Dpython_version=3'      ],
+            [label: 'ubuntu16',  compiler: 'native',  buildType: 'Release', opts: '-Dimt=OFF'               ],
+            [label: 'mac1013',   compiler: 'native',  buildType: 'Release', opts: ''                        ],
+            [label: 'windows10', compiler: 'vc15',    buildType: 'Release', opts: ''                        ]
         ]
     }
 
@@ -73,8 +76,8 @@ class BuildConfiguration {
      */
     static def getIncrementalConfiguration() {
         return [
-            [label: 'centos7', compiler: 'gcc62', buildType: 'Debug'],
-            [label: 'slc6',    compiler: 'gcc62', buildType: 'Debug']
+            [label: 'centos7', compiler: 'gcc62', buildType: 'Debug', opts: '-Dcxx14=ON'],
+            [label: 'slc6',    compiler: 'gcc62', buildType: 'Debug', opts: '-Dcxx14=ON']
         ]
     }
 
