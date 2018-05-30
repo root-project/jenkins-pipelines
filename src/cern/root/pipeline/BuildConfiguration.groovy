@@ -64,7 +64,7 @@ class BuildConfiguration {
             [label: 'centos7',   compiler: 'gcc7',    buildType: 'Debug'  , opts: '-Dcxx17=ON'              ],
             [label: 'centos7',   compiler: 'gcc7',    buildType: 'Release', opts: '-Dcxx17=ON'              ],
             [label: 'centos7',   compiler: 'gcc7',    buildType: 'Release', opts: '-Druntime_cxxmodules=ON' ],
-            [label: 'fedora28',  compiler: 'native',  buildType: 'Release', opts: '-Dpython_version=3'      ],
+            [label: 'fedora28',  compiler: 'native',  buildType: 'Release', opts: '-DPYTHON_EXECUTABLE=/usr/bin/python3' ],
             [label: 'ubuntu16',  compiler: 'native',  buildType: 'Release', opts: '-Dimt=OFF'               ],
             [label: 'mac1013',   compiler: 'native',  buildType: 'Release', opts: ''                        ],
             [label: 'windows10', compiler: 'vc15',    buildType: 'Release', opts: ''                        ]
