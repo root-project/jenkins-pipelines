@@ -58,12 +58,12 @@ class BuildConfiguration {
     static def getPullrequestConfiguration() {
         return [
             [label: 'slc6',      compiler: 'gcc48',   buildType: 'Release', opts: ''                        ],
+            [label: 'slc6',      compiler: 'gcc62',   buildType: 'Release', opts: '-Druntime_cxxmodules=ON' ],
             [label: 'slc6-i686', compiler: 'gcc49',   buildType: 'Release', opts: ''                        ],
             [label: 'centos7',   compiler: 'clang39', buildType: 'Release', opts: ''                        ],
             [label: 'centos7',   compiler: 'gcc62',   buildType: 'Release', opts: '-Dcxx14=ON'              ],
             [label: 'centos7',   compiler: 'gcc7',    buildType: 'Debug'  , opts: '-Dcxx17=ON'              ],
             [label: 'centos7',   compiler: 'gcc7',    buildType: 'Release', opts: '-Dcxx17=ON'              ],
-            [label: 'centos7',   compiler: 'gcc7',    buildType: 'Release', opts: '-Druntime_cxxmodules=ON' ],
             [label: 'fedora28',  compiler: 'native',  buildType: 'Release', opts: '-Dpython_version=3'      ],
             [label: 'ubuntu16',  compiler: 'native',  buildType: 'Release', opts: '-Dimt=OFF'               ],
             [label: 'mac1013',   compiler: 'native',  buildType: 'Release', opts: ''                        ],
