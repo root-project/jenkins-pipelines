@@ -186,7 +186,7 @@ class BotParser implements Serializable {
      */
     void configure(build) {
         for (config in validBuildConfigurations) {
-            build.buildOn(config.platform, config.compiler, config.buildType, extraCMakeOptions)
+            build.buildOn(config.platform, config.compiler, 'Debug', extraCMakeOptions)
         }
 
         // If no override of the platforms, add the default ones
