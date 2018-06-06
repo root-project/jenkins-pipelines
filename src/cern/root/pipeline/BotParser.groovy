@@ -186,7 +186,7 @@ class BotParser implements Serializable {
      */
     void configure(build) {
         for (config in validBuildConfigurations) {
-            build.buildOn(config.platform, config.compiler, config.buildType, config.opts)
+            build.buildOn(config.platform, config.compiler, config.buildType, extraCMakeOptions)
         }
 
         // If no override of the platforms, add the default ones
@@ -194,7 +194,5 @@ class BotParser implements Serializable {
             script.println 'Adding default config'
             build.addConfigurations(BuildConfiguration.getPullrequestConfiguration())
         }
-
-        build.addBuildParameter('ExtraCMakeOptions', extraCMakeOptions)
     }
 }
