@@ -59,6 +59,7 @@ class BuildConfiguration {
         return [
             [label: 'slc6',      compiler: 'gcc48',   buildType: 'Release', opts: ''                        ],
             [label: 'slc6',      compiler: 'gcc62',   buildType: 'Debug',   opts: '-Druntime_cxxmodules=ON' ],
+            [label: 'slc6-i686', compiler: 'gcc49',   buildType: 'Release', opts: ''                        ],
             [label: 'centos7',   compiler: 'clang39', buildType: 'Release', opts: ''                        ],
             [label: 'centos7',   compiler: 'gcc62',   buildType: 'Release', opts: '-Dcxx14=ON'              ],
             [label: 'centos7',   compiler: 'gcc7',    buildType: 'Release', opts: '-Dcxx17=ON'              ],
