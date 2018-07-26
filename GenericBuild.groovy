@@ -31,7 +31,7 @@ node(LABEL) {
                     // TODO: Use the git step when it has implemented specifying refspecs
                     // See https://jenkins.io/doc/pipeline/steps/workflow-scm-step/ for CloneOption
                     checkout([$class: 'GitSCM', branches: [[name: ROOT_BRANCH]], doGenerateSubmoduleConfigurations: false,
-                            extensions: [[$class: 'CloneOption', timeout: 30, noTags: true, reference: '', shallow: true]],
+                            extensions: [[$class: 'CloneOption', timeout: 5, noTags: true, reference: '/eos/project/r/root-eos/git-tmp/root.git', shallow: true]],
                             submoduleCfg: [], userRemoteConfigs: [[refspec: ROOT_REFSPEC, url: env.GIT_URL]]])
                 }
             }
@@ -42,7 +42,7 @@ node(LABEL) {
                         def rootTestUrl = 'https://github.com/root-project/roottest.git';
                         // TODO: Use the git step when it has implemented specifying refspecs
                         checkout([$class: 'GitSCM', branches: [[name: ROOTTEST_BRANCH]], doGenerateSubmoduleConfigurations: false,
-                                extensions: [[$class: 'CloneOption', timeout: 30, noTags: true, reference: '']],
+                                extensions: [[$class: 'CloneOption', timeout: 5, noTags: true, reference: '/eos/project/r/root-eos/git-tmp/roottest.git']],
                                 submoduleCfg: [], userRemoteConfigs: [[refspec: ROOTTEST_REFSPEC, url: rootTestUrl]]])
                     }
                 }
