@@ -17,8 +17,10 @@ for (ParameterValue p in params) {
     env[p.key] = p.value
 }
 
-// TODO: This should be avoided 
-env.GIT_URL = 'https://github.com/root-project/root.git'
+// TODO: This should be avoided
+//env.GIT_URL = 'https://github.com/root-project/root.git'
+env.GIT_URL = 'https://root.cern/git/root.git'
+
 
 currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL/$COMPILER $BUILD_NOTE")
 currentBuild.setDescription("$BUILD_DESCRIPTION")
