@@ -19,7 +19,7 @@ for (ParameterValue p in params) {
 
 // TODO: This should be avoided
 //env.GIT_URL = 'https://github.com/root-project/root.git'
-env.GIT_URL = 'https://root.cern/git/root.git'
+env.GIT_URL = 'http://root.cern/git/root.git'
 
 
 currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL/$COMPILER $BUILD_NOTE")
