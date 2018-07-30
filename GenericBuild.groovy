@@ -41,7 +41,7 @@ node(LABEL) {
             if (LABEL != 'windows10') {
                 dir('roottest') {
                     retry(3) {
-                        def rootTestUrl = 'https://github.com/root-project/roottest.git';
+                        def rootTestUrl = 'http://root.cern/git/roottest.git';
                         // TODO: Use the git step when it has implemented specifying refspecs
                         checkout([$class: 'GitSCM', branches: [[name: ROOTTEST_BRANCH]], doGenerateSubmoduleConfigurations: false,
                                 extensions: [[$class: 'CloneOption', timeout: 10, noTags: true]],
