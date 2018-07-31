@@ -25,7 +25,7 @@ timestamps {
     BotParser parser = new BotParser(this, params.ExtraCMakeOptions)
     GenericBuild build = new GenericBuild(this, 'root-pullrequests-build', params.MODE)
 
-    build.addBuildParameter('ROOT_REFSPEC', "+refs/pull/${ghprbPullId}/head:refs/remotes/origin/pr/${ghprbPullId}/head")
+    build.addBuildParameter('ROOT_REFSPEC', "+refs/pull/${ghprbPullId}/head:refs/remotes/origin/pr/${ghprbPullId}/head +refs/heads/${params.ghprbTargetBranch}:refs/remotes/origin/${params.ghprbTargetBranch}")
     build.addBuildParameter('ROOT_BRANCH', "origin/pr/${ghprbPullId}/head")
     build.addBuildParameter('ROOTTEST_BRANCH', "${params.ghprbTargetBranch}")
     build.addBuildParameter('GIT_COMMIT', "${params.sha1}")
