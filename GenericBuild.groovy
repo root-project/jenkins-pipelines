@@ -45,7 +45,7 @@ node(LABEL) {
                         def rootTestUrl = 'http://root.cern/git/roottest.git';
                         // TODO: Use the git step when it has implemented specifying refspecs
                         checkout([$class: 'GitSCM', branches: [[name: ROOTTEST_BRANCH]], doGenerateSubmoduleConfigurations: false,
-                                extensions: [[$class: 'CloneOption', timeout: 10, noTags: true, shallow: false]],
+                                extensions: [[$class: 'CloneOption', timeout: 10, noTags: true, shallow: false]]
                                            +[[$class: 'LocalBranch', localBranch: '']],
                                 submoduleCfg: [], userRemoteConfigs: [[refspec: ROOTTEST_REFSPEC, url: rootTestUrl]]])
                     }
