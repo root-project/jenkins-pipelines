@@ -17,10 +17,7 @@ for (ParameterValue p in params) {
     env[p.key] = p.value
 }
 
-// TODO: This should be avoided
-//env.GIT_URL = 'https://github.com/root-project/root.git'
 env.GIT_URL = 'http://root.cern/git/root.git'
-
 
 currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL/$COMPILER $BUILD_NOTE")
 currentBuild.setDescription("$BUILD_DESCRIPTION")
@@ -54,7 +51,7 @@ node(LABEL) {
 
             dir('rootspi') {
                 retry(3) {
-                    git url: 'https://github.com/root-project/rootspi.git'
+                    git url: 'http://root.cern/git/rootspi.git'
                 }
             }
         }

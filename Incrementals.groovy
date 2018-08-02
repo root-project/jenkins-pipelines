@@ -18,7 +18,7 @@ GenericBuild build = new GenericBuild(this, 'root-incrementals-build', params.MO
 
 stage('Configuring') {
     node('master') {
-        git url: 'https://github.com/root-project/root.git', branch: 'master'
+        git url: 'http://root.cern/git/root.git', branch: 'master'
     }
 
     build.addConfigurations(BuildConfiguration.incrementalConfiguration)
