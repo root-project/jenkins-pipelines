@@ -2,7 +2,7 @@
 
 node('docker-host') {
     timestamps {
-        git 'http://root.cern/git/rootspi.git'
+        git 'https://github.com/root-project/rootspi.git'
         
         dir('docker/ubuntu16-base') {
             stage('Build') {

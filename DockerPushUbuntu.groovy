@@ -5,7 +5,7 @@ def repoName = 'rootproject/root-ubuntu16'
 node('docker-host') {
     timestamps {
         def stagingName = "rootbuild-${java.util.UUID.randomUUID()}"
-        git 'http://root.cern/git/rootspi.git'
+        git 'https://github.com/root-project/rootspi.git'
         
         dir('docker/ubuntu16') {
             try {
@@ -21,7 +21,7 @@ node('docker-host') {
                         }
                         
                         dir('rootspi') {
-                            git url: 'http://root.cern/git/rootspi.git'
+                            git url: 'https://github.com/root-project/rootspi.git'
                         }
                     }
                     
