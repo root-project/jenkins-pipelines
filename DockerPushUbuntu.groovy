@@ -5,7 +5,7 @@ def repoName = 'rootproject/root-ubuntu16'
 node('docker-host') {
     timestamps {
         def stagingName = "rootbuild-${java.util.UUID.randomUUID()}"
-        git 'https://github.com/root-project/rootspi.git'
+        git 'http://root.cern/git/rootspi.git'
         
         dir('docker/ubuntu16') {
             try {
@@ -13,15 +13,15 @@ node('docker-host') {
                 stage('Build') {
                     dir('root-build') {
                         dir('roottest') {
-                            git url: 'https://github.com/root-project/roottest.git', branch: branch
+                            git url: 'http://root.cern/git/roottest.git', branch: branch
                         }
                         
                         dir('root') {
-                            git url: 'https://github.com/root-project/root.git', branch: branch
+                            git url: 'http://root.cern/git/root.git', branch: branch
                         }
                         
                         dir('rootspi') {
-                            git url: 'https://github.com/root-project/rootspi.git'
+                            git url: 'http://root.cern/git/rootspi.git'
                         }
                     }
                     
