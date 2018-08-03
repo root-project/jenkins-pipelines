@@ -51,7 +51,7 @@ node(LABEL) {
 
             dir('rootspi') {
                 retry(3) {
-                    git url: 'https://github.com/root-project/rootspi.git'
+                    git url: 'http://root.cern/git/rootspi.git'
                 }
             }
         }
