@@ -194,6 +194,7 @@ class BotParser implements Serializable {
         if (!overrideDefaultConfiguration) {
             script.println 'Adding default config'
             build.addConfigurations(BuildConfiguration.getPullrequestConfiguration())
+	    build.addBuildParameter('ExtraCMakeOptions', extraCMakeOptions)
         }
     }
 }
