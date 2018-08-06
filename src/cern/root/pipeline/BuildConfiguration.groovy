@@ -57,15 +57,15 @@ class BuildConfiguration {
      */
     static def getPullrequestConfiguration(extraCMakeOptions) {
         return [
-            [ label: 'slc6',      compiler: 'gcc48',   buildType: 'Release', opts: ''                   + extraCMakeOptions ],
-            [ label: 'slc6-i686', compiler: 'gcc49',   buildType: 'Release', opts: ''                   + extraCMakeOptions ],
-            [ label: 'centos7',   compiler: 'clang39', buildType: 'Release', opts: ''                   + extraCMakeOptions ],
-            [ label: 'centos7',   compiler: 'gcc62',   buildType: 'Release', opts: '-Dcxx14=ON'         + extraCMakeOptions ],
-            [ label: 'centos7',   compiler: 'gcc7',    buildType: 'Release', opts: '-Dcxx17=ON'         + extraCMakeOptions ],
-            [ label: 'fedora28',  compiler: 'native',  buildType: 'Release', opts: '-Dpython_version=3' + extraCMakeOptions ],
-            [ label: 'ubuntu16',  compiler: 'native',  buildType: 'Release', opts: '-Dimt=OFF'          + extraCMakeOptions ],
-            [ label: 'mac1013',   compiler: 'native',  buildType: 'Release', opts: ''                   + extraCMakeOptions ],
-            [ label: 'windows10', compiler: 'vc15',    buildType: 'Release', opts: ''                   + extraCMakeOptions ]
+            [ label: 'slc6',      compiler: 'gcc48',   buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ],
+            [ label: 'slc6-i686', compiler: 'gcc49',   buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ],
+            [ label: 'centos7',   compiler: 'clang39', buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ],
+            [ label: 'centos7',   compiler: 'gcc62',   buildType: 'Release', opts: '-Dcxx14=ON'         + ' ' + extraCMakeOptions ],
+            [ label: 'centos7',   compiler: 'gcc7',    buildType: 'Release', opts: '-Dcxx17=ON'         + ' ' + extraCMakeOptions ],
+            [ label: 'fedora28',  compiler: 'native',  buildType: 'Release', opts: '-Dpython_version=3' + ' ' + extraCMakeOptions ],
+            [ label: 'ubuntu16',  compiler: 'native',  buildType: 'Release', opts: '-Dimt=OFF'          + ' ' + extraCMakeOptions ],
+            [ label: 'mac1013',   compiler: 'native',  buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ],
+            [ label: 'windows10', compiler: 'vc15',    buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ]
         ]
     }
 
