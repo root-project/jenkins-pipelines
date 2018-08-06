@@ -161,7 +161,7 @@ class BotParser implements Serializable {
             }
 
             if (!overrideDefaultConfiguration) {
-                for (config in BuildConfiguration.getPullrequestConfiguration()) {
+                for (config in BuildConfiguration.getPullrequestConfiguration(extraCMakeOptions)) {
                     commentResponse.append('`' + config.label + '`/`' + config.compiler + '`, ')
                 }
             }
@@ -193,8 +193,7 @@ class BotParser implements Serializable {
         // If no override of the platforms, add the default ones
         if (!overrideDefaultConfiguration) {
             script.println 'Adding default config'
-            build.addConfigurations(BuildConfiguration.getPullrequestConfiguration())
-	    build.addBuildParameter('ExtraCMakeOptions', extraCMakeOptions)
+            build.addConfigurations(BuildConfiguration.getPullrequestConfiguration(extraCMakeOptions))
         }
     }
 }
