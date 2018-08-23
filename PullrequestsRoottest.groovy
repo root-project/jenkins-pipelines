@@ -26,7 +26,7 @@ timestamps {
     GenericBuild build = new GenericBuild(this, 'roottest-pullrequests-build', params.MODE)
 
     build.addBuildParameter('ROOTTEST_REFSPEC', '+refs/pull/*:refs/remotes/origin/pr/*')
-    build.addBuildParameter('ROOTTEST_BRANCH', "origin/pr/${ghprbPullId}/merge")
+    build.addBuildParameter('ROOTTEST_BRANCH', "origin/pr/${ghprbPullId}/head")
     build.addBuildParameter('ROOT_BRANCH', "${params.ghprbTargetBranch}")
     build.addBuildParameter('GIT_COMMIT', "${params.sha1}")
     build.addBuildParameter('BUILD_NOTE', "PR #$ghprbPullId")
