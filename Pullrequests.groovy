@@ -34,7 +34,7 @@ timestamps {
     build.addBuildParameter('GIT_COMMIT', "${params.sha1}")
     build.addBuildParameter('BUILD_NOTE', "PR #$ghprbPullId")
 
-    currentBuild.setDisplayName("#$BUILD_NUMBER PR #$ghprbPullId")
+    currentBuild.setDisplayName("#$BUILD_NUMBER PR #$ghprbPullAuthorLogin-#$ghprbPullId")
 
     build.cancelBuilds('.*PR #' + ghprbPullId + '$')
 
