@@ -32,9 +32,9 @@ timestamps {
     build.addBuildParameter('ROOT_BRANCH', "${params.ghprbTargetBranch}")
     build.addBuildParameter('ROOTTEST_BRANCH', "${params.ghprbTargetBranch}")
     build.addBuildParameter('GIT_COMMIT', "${params.sha1}")
-    build.addBuildParameter('BUILD_NOTE', "PR #$ghprbPullId")
+    build.addBuildParameter('BUILD_NOTE', "$ghprbPullAuthorLogin PR #$ghprbPullId")
 
-    currentBuild.setDisplayName("#$BUILD_NUMBER PR #$ghprbPullAuthorLogin-#$ghprbPullId")
+    currentBuild.setDisplayName("#$BUILD_NUMBER $ghprbPullAuthorLogin PR #$ghprbPullId")
 
     build.cancelBuilds('.*PR #' + ghprbPullId + '$')
 
