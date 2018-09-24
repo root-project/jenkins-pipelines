@@ -58,6 +58,7 @@ class BuildConfiguration {
     static def getPullrequestConfiguration(extraCMakeOptions) {
         return [
             [ label: 'slc6',      compiler: 'gcc48',   buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ],
+            [ label: 'slc6',      compiler: 'clang_gcc62', buildType: 'Release', opts: '-Dcxxmodules=ON'+ ' ' + extraCMakeOptions ],
             [ label: 'slc6-i686', compiler: 'gcc49',   buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ],
             [ label: 'centos7',   compiler: 'clang39', buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ],
             [ label: 'centos7',   compiler: 'gcc62',   buildType: 'Release', opts: '-Dcxx14=ON'         + ' ' + extraCMakeOptions ],
