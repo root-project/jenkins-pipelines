@@ -19,6 +19,7 @@ class BuildConfiguration {
             'mac1011',
             'mac1012',
             'mac1013',
+            'mac1014',
             'slc6',
             'slc6-i686',
             'ubuntu14',
