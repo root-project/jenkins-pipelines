@@ -56,15 +56,18 @@ node(LABEL) {
 
         try {
             stage('Build') {
+              timeout(time: 240, unit: 'MINUTES') {
                 if (LABEL == 'windows10') {
                     bat 'rootspi/jenkins/jk-all.bat'
                 } else {
                     sh 'rootspi/jenkins/jk-all build'
                 }
+              }
             }
 
             if (LABEL != 'windows10') {
                 stage('Test') {
+                  timeout(time: 240, unit: 'MINUTES') {
                     sh 'rootspi/jenkins/jk-all test'
 
                     def testThreshold = [[$class: 'FailedThreshold',
@@ -81,6 +84,7 @@ node(LABEL) {
                     if (currentBuild.result == 'FAILURE') {
                         throw new Exception("Test result caused build to fail")
                     }
+                  }
                 }
             }
         } catch (err) {
