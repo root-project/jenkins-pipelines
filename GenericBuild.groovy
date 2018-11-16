@@ -19,7 +19,7 @@ for (ParameterValue p in params) {
 
 env.GIT_URL = 'http://root.cern/git/root.git'
 
-currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL/SPEC $BUILD_NOTE")
+currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL/$SPEC $BUILD_NOTE")
 currentBuild.setDescription("$BUILD_DESCRIPTION")
 
 node(LABEL) {
