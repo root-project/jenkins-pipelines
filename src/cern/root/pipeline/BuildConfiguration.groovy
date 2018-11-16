@@ -11,45 +11,33 @@ class BuildConfiguration {
     static def getAvailablePlatforms() {
         return [
             'arm64',
-            'centos7',
-            'fedora25',
-            'fedora26',
-            'fedora27',
-            'fedora28',
+            'ROOT-centos7',
+            'centos7-manycore',
+            'ROOT-fedora26',
+            'ROOT-fedora27',
+            'ROOT-fedora28',
             'mac1011',
             'mac1012',
             'mac1013',
             'mac1014',
-            'slc6',
-            'slc6-i686',
-            'ubuntu14',
-            'ubuntu16',
-            'ubuntu17',
-            'ubuntu18',
+            'ROOT-ubuntu14',
+            'ROOT-ubuntu16',
+            'ROOT-ubuntu17',
+            'ROOT-ubuntu18',
             'windows10'
         ]
     }
 
     /**
-     * @return The available compilers that can be used.
+     * @return The available specializations that can be used.
      */
     @NonCPS
-    static def getAvailableCompilers() {
+    static def getAvailableSpecializations() {
         return [
-            'clang39',
-            'clang_gcc52',
-            'clang_gcc62',
-            'classic',
-            'gcc48',
-            'gcc49',
-            'gcc52',
-            'gcc54',
-            'gcc62',
-            'gcc7',
-            'icc17',
-            'icc18',
-            'native',
-            'vc15'
+	    'cxx14',
+	    'cxx17',
+	    'python3',
+	    'noimt'
         ]
     }
 
@@ -58,25 +46,12 @@ class BuildConfiguration {
      */
     static def getPullrequestConfiguration(extraCMakeOptions) {
         return [
-            [ label: 'slc6',      compiler: 'gcc48',   buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ],
-            [ label: 'slc6',      compiler: 'gcc62',   buildType: 'Release', opts: '-Druntime_cxxmodules=ON' + ' ' + extraCMakeOptions ],
-            [ label: 'slc6-i686', compiler: 'gcc49',   buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ],
-            [ label: 'centos7',   compiler: 'gcc62',   buildType: 'Release', opts: '-Dcxx14=ON'         + ' ' + extraCMakeOptions ],
-            [ label: 'centos7',   compiler: 'gcc7',    buildType: 'Release', opts: '-Dcxx17=ON'         + ' ' + extraCMakeOptions ],
-            [ label: 'fedora28',  compiler: 'native',  buildType: 'Release', opts: '-Dpython_version=3' + ' ' + extraCMakeOptions ],
-            [ label: 'ubuntu16',  compiler: 'native',  buildType: 'Release', opts: '-Dimt=OFF'          + ' ' + extraCMakeOptions ],
-            [ label: 'mac1013',   compiler: 'native',  buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ],
-            [ label: 'windows10', compiler: 'vc15',    buildType: 'Release', opts: ''                   + ' ' + extraCMakeOptions ]
-        ]
-    }
-
-    /**
-     * @return Build configuration for incrementals.
-     */
-    static def getIncrementalConfiguration() {
-        return [
-            [label: 'centos7', compiler: 'gcc62', buildType: 'Debug', opts: '-Dcxx14=ON'],
-            [label: 'slc6',    compiler: 'gcc62', buildType: 'Debug', opts: '-Dcxx14=ON']
+            [ label: 'centos7',   opts: extraCMakeOptions, spec: 'cxx14' ],
+            [ label: 'centos7',   opts: extraCMakeOptions, spec: 'cxx17' ],
+            [ label: 'fedora28',  opts: extraCMakeOptions, spec: 'python3' ],
+            [ label: 'ubuntu16',  opts: extraCMakeOptions, spec: 'noimt' ],
+            [ label: 'mac1013',   opts: extraCMakeOptions, spec: '' ],
+            [ label: 'windows10', opts: extraCMakeOptions, sepc: '' ]
         ]
     }
 
@@ -87,7 +62,7 @@ class BuildConfiguration {
      * @return True if recognized, otherwise false.
      */
     @NonCPS
-    static boolean recognizedPlatform(String compiler, String platform) {
-        return getAvailableCompilers().contains(compiler) && getAvailablePlatforms().contains(platform)
+    static boolean recognizedPlatform(String spec, String platform) {
+        return getAvailableSpecializations().confains(spec) && getAvailablePlatforms().contains(platform)
     }
 }

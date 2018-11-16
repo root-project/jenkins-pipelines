@@ -40,7 +40,7 @@ class GenericBuild implements Serializable {
         addBuildParameter('ROOTTEST_BRANCH', script.params.VERSION)
     }
 
-    private def performBuild(label, compiler, buildType, opts) {
+    private def performBuild(label, spec, buildType, opts) {
         def jobParameters = []
 
         // Copy parameters from build parameters
@@ -49,12 +49,12 @@ class GenericBuild implements Serializable {
         }
 
         jobParameters << script.string(name: 'LABEL', value: label)
-        jobParameters << script.string(name: 'COMPILER', value: compiler)
+        jobParameters << script.string(name: 'SPEC', value: spec)
         jobParameters << script.string(name: 'BUILDTYPE', value: buildType)
         jobParameters << script.string(name: 'ExtraCMakeOptions', value: opts)
 
         def result = script.build job: jobName, parameters: jobParameters, propagate: false
-        def resultWrapper = [result: result, label: label, compiler: compiler, buildType: buildType]
+        def resultWrapper = [result: result, label: label, spec: spec, buildType: buildType]
         buildResults << resultWrapper
 
         for (postStep in postBuildSteps) {
@@ -73,15 +73,15 @@ class GenericBuild implements Serializable {
     /**
      * Adds a configuration that ROOT should be built on.
      * @param label Label to build on, e.g. slc6.
-     * @param compiler Compiler to build on, e.g. gcc62.
+     * @param spec Specialization to build on, e.g. noimt.
      * @param buildType Build type, e.g. Debug.
      */
-    void buildOn(label, compiler, buildType, opts) {
+    void buildOn(label, spec, buildType, opts) {
         script.println "Preparing '$buildType' build on $label with options $opts"
-        def configurationLabel = "$label-$compiler-$buildType"
+        def configurationLabel = "$label-$spec-$buildType"
         configuration[configurationLabel] = { 
             script.stage("Build - $configurationLabel") {
-                performBuild(label, compiler, buildType, opts)
+                performBuild(label, spec, buildType, opts)
             }
         }
     }
@@ -92,7 +92,7 @@ class GenericBuild implements Serializable {
      */
     void addConfigurations(configs) {
         for (config in configs) {
-            buildOn(config.label, config.compiler, config.buildType, config.opts)
+            buildOn(config.label, config.spec, config.buildType, config.opts)
         }
     }
 

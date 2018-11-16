@@ -109,15 +109,15 @@ class BotParser implements Serializable {
             for (unparsedPattern in patterns) {
                 def patternArgs = unparsedPattern.split('/')
                 def platform = patternArgs[0]
-                def compiler = patternArgs[1]
+                def spec = patternArgs[1]
                 
 
-                script.println "Received label $platform with compiler $compiler"
+                script.println "Received label $platform with specialization $spec"
 
-                if (!BuildConfiguration.recognizedPlatform(compiler, platform)) {
-                    invalidBuildConfigurations << [compiler: compiler, platform: platform]
+                if (!BuildConfiguration.recognizedPlatform(spec, platform)) {
+                    invalidBuildConfigurations << [spec: spec, platform: platform]
                 } else {
-                    validBuildConfigurations << [compiler: compiler, platform: platform]
+                    validBuildConfigurations << [spec: spec, platform: platform]
                 }
             }
         }
@@ -140,29 +140,29 @@ class BotParser implements Serializable {
      * @param gitHub GitHub.
      */
     void postStatusComment(gitHub) {
-        // If someone posted a platform/compiler that isn't recognized, abort the build.
+        // If someone posted a platform/spec that isn't recognized, abort the build.
         if (invalidBuildConfigurations.size() > 0) {
             def unrecognizedPlatforms = new StringBuilder()
 
             for (config in invalidBuildConfigurations) {
-                unrecognizedPlatforms.append('`' + config.platform + '`/`' + config.compiler + '`, ')
+                unrecognizedPlatforms.append('`' + config.platform + '`/`' + config.spec + '`, ')
             }
 
             unrecognizedPlatforms.replace(unrecognizedPlatforms.length() - 2, unrecognizedPlatforms.length(), ' ')
             gitHub.postComment("Didn't recognize ${unrecognizedPlatforms.toString().trim()} aborting build.")
 
-            throw new Exception("Unrecognized compiler(s)/platform(s): ${unrecognizedPlatforms.toString()}")
+            throw new Exception("Unrecognized specialization(s)/platform(s): ${unrecognizedPlatforms.toString()}")
         } else {
             def commentResponse = new StringBuilder()
             commentResponse.append('Starting build on ')
 
             for (config in validBuildConfigurations) {
-                commentResponse.append('`' + config.platform + '`/`' + config.compiler + '`, ')
+                commentResponse.append('`' + config.platform + '`/`' + config.spec + '`, ')
             }
 
             if (!overrideDefaultConfiguration) {
                 for (config in BuildConfiguration.getPullrequestConfiguration(extraCMakeOptions)) {
-                    commentResponse.append('`' + config.label + '`/`' + config.compiler + '`, ')
+                    commentResponse.append('`' + config.label + '`/`' + config.spec + '`, ')
                 }
             }
 
@@ -186,8 +186,8 @@ class BotParser implements Serializable {
      */
     void configure(build) {
         for (config in validBuildConfigurations) {
-            script.println "Creating build : with flags $config.opts + $extraCMakeOptions"
-            build.buildOn(config.platform, config.compiler, 'Debug', config.opts + extraCMakeOptions)
+            script.println "Creating build : with flags $config.opts"
+            build.buildOn(config.platform, config.spec, config.opts + extraCMakeOptions)
         }
 
         // If no override of the platforms, add the default ones
