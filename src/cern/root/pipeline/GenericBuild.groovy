@@ -92,7 +92,7 @@ class GenericBuild implements Serializable {
      */
     void addConfigurations(configs) {
         for (config in configs) {
-            buildOn(config.label, config.spec, config.buildType, config.opts)
+            buildOn(config.label, config.spec, 'Release', config.opts)
         }
     }
 
