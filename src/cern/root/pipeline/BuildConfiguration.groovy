@@ -51,7 +51,7 @@ class BuildConfiguration {
             [ label: 'fedora28',  opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'ubuntu16',  opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'mac1013',   opts: extraCMakeOptions, spec: '' ],
-            [ label: 'windows10', opts: extraCMakeOptions, sepc: '' ]
+            [ label: 'windows10', opts: extraCMakeOptions, spec: '' ]
         ]
     }
 
