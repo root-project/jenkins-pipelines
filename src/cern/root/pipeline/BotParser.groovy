@@ -100,13 +100,14 @@ class BotParser implements Serializable {
      */
     @NonCPS
     void parse() {
-        script.println 'Comment recognized as a parseable command'
+        script.println "Comment recognized as a parseable command: $matrix"
 
         if (matrix != null) {
             // Parse and set the config
             def patterns = matrix.trim().replace(',' ,'').split(' ')
 
             for (unparsedPattern in patterns) {
+                script.println "Working on unparsedPattern \"$unparsedPattern\""
                 def patternArgs = unparsedPattern.split('/')
                 def platform = patternArgs[0]
                 def spec = patternArgs[1]
