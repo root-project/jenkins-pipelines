@@ -62,6 +62,6 @@ class BuildConfiguration {
      */
     @NonCPS
     static boolean recognizedPlatform(String spec, String platform) {
-        return getAvailableSpecializations().confains(spec) && getAvailablePlatforms().contains(platform)
+        return getAvailableSpecializations().contains(spec) && getAvailablePlatforms().contains(platform)
     }
 }
