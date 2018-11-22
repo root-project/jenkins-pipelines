@@ -34,10 +34,14 @@ class BuildConfiguration {
     @NonCPS
     static def getAvailableSpecializations() {
         return [
-	    'cxx14',
-	    'cxx17',
-	    'python3',
-	    'noimt'
+        'cxx14',
+        'cxx17',
+        'python3',
+        'noimt',
+        'rtcxxmod',
+        'pyroot_experimental',
+        'jemalloc',
+        'tcmalloc'
         ]
     }
 
