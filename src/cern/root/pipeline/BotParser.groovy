@@ -76,6 +76,7 @@ class BotParser implements Serializable {
     @NonCPS
     boolean isParsableComment(comment) {
         comment = comment.replace('\\\"', '\"')
+        script.println "AXEL: Comment is \"$comment\""
 
         def matcher = Pattern.compile(COMMENT_REGEX).matcher(comment)
 
@@ -84,7 +85,9 @@ class BotParser implements Serializable {
         if (parsableComment) {
             overrideDefaultConfiguration = matcher.group('overrideDefaultConfiguration').equals('just')
             matrix = matcher.group('matrix')
+            script.println "AXEL: matrix is \"$matrix\""
             flags = matcher.group('flags')
+            script.println "AXEL: flags is \"$flags\""
 
             // If we specify a build configuration without "also/just on ...", only build on those platforms
             if (matrix != null && matcher.group('overrideDefaultConfiguration') == null) {
