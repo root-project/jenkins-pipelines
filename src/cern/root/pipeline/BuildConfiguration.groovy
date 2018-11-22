@@ -51,7 +51,7 @@ class BuildConfiguration {
     static def getPullrequestConfiguration(extraCMakeOptions) {
         return [
             [ label: 'ROOT-centos7', opts: extraCMakeOptions, spec: 'noimt' ],
-            [ label: 'ROOT-fedora29',  opts: extraCMakeOptions, spec: 'python3' ],
+            [ label: 'ROOT-fedora28',  opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'ROOT-ubuntu16',  opts: extraCMakeOptions, spec: 'rtcxxmod' ],
             [ label: 'mac1014',   opts: extraCMakeOptions, spec: 'cxx17' ],
             [ label: 'windows10', opts: extraCMakeOptions, spec: 'default' ]
