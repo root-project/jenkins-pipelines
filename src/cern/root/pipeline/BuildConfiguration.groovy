@@ -13,16 +13,15 @@ class BuildConfiguration {
             'arm64',
             'ROOT-centos7',
             'centos7-manycore',
-            'ROOT-fedora26',
             'ROOT-fedora27',
             'ROOT-fedora28',
+            'ROOT-fedora29',
             'mac1011',
             'mac1012',
             'mac1013',
             'mac1014',
             'ROOT-ubuntu14',
             'ROOT-ubuntu16',
-            'ROOT-ubuntu17',
             'ROOT-ubuntu18',
             'windows10'
         ]
