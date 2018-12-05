@@ -33,6 +33,7 @@ class BuildConfiguration {
     @NonCPS
     static def getAvailableSpecializations() {
         return [
+	'default',
         'cxx14',
         'cxx17',
         'python3',
