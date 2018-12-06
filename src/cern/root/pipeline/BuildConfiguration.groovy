@@ -12,7 +12,7 @@ class BuildConfiguration {
         return [
             'arm64',
             'ROOT-centos7',
-            'centos7-manycore',
+            'ROOT-performance-centos7-multicore',
             'ROOT-fedora27',
             'ROOT-fedora28',
             'ROOT-fedora29',
