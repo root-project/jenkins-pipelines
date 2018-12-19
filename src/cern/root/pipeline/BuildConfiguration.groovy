@@ -39,7 +39,9 @@ class BuildConfiguration {
         'cxx17',
         'python3',
         'noimt',
+        'soversion',
         'rtcxxmod',
+        'cxxmod',
         'pyroot_experimental',
         'jemalloc',
         'tcmalloc'
