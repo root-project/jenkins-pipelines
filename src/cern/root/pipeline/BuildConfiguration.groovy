@@ -54,7 +54,7 @@ class BuildConfiguration {
      */
     static def getPullrequestConfiguration(extraCMakeOptions) {
         return [
-            [ label: 'ROOT-centos7', opts: extraCMakeOptions, spec: 'python3' ],
+            [ label: 'ROOT-performance-centos7-multicore', opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'python3' ],
             [ label: 'ROOT-fedora27',  opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'ROOT-ubuntu16',  opts: extraCMakeOptions, spec: 'rtcxxmod' ],
 #            [ label: 'ROOT-ubuntu18.04-i386',  opts: extraCMakeOptions, spec: 'python3' ],
