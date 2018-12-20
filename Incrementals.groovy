@@ -9,7 +9,7 @@ properties([
         string(name: 'VERSION', defaultValue: 'master', description: 'Branch to be built'),
         string(name: 'EXTERNALS', defaultValue: 'ROOT-latest', description: ''),
         string(name: 'EMPTY_BINARY', defaultValue: 'false', description: 'Boolean to empty the binary directory (i.e. to force a full re-build)'),
-        string(name: 'ExtraCMakeOptions', defaultValue: '-Dimt=OFF -Dccache=ON', description: 'Additional CMake configuration options of the form "-Doption1=value1 -Doption2=value2"'),
+        string(name: 'ExtraCMakeOptions', defaultValue: '', description: 'Additional CMake configuration options of the form "-Doption1=value1 -Doption2=value2"'),
         string(name: 'MODE', defaultValue: 'experimental', description: 'The build mode')
     ])
 ])
