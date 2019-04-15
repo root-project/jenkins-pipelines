@@ -58,7 +58,7 @@ class BuildConfiguration {
             [ label: 'ROOT-fedora27',  opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'ROOT-fedora29',  opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'ROOT-ubuntu16',  opts: extraCMakeOptions, spec: 'rtcxxmod' ],
-            [ label: 'ROOT-ubuntu18.04-i386',  opts: extraCMakeOptions, spec: 'cxx14' ],
+            /*[ label: 'ROOT-ubuntu18.04-i386',  opts: extraCMakeOptions, spec: 'cxx14' ],*/
             [ label: 'mac1014',   opts: extraCMakeOptions, spec: 'cxx17' ],
             [ label: 'windows10', opts: extraCMakeOptions, spec: 'default' ]
         ]
