@@ -17,6 +17,7 @@ class BuildConfiguration {
             'ROOT-fedora27',
             'ROOT-fedora28',
             'ROOT-fedora29',
+            'ROOT-fedora30',
             'mac1011',
             'mac1012',
             'mac1013',
