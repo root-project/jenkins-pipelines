@@ -11,7 +11,7 @@ class BotParser implements Serializable {
     private boolean parsableComment
     private String matrix
     private String flags
-    private static final String COMMENT_REGEX = 'build (((?<overrideDefaultConfiguration>just|also)\\s)?on (?<matrix>([A-Za-z0-9_-]*\\/[A-Za-z0-9_-]*,?\\s?)*))?(with flags (?<flags>.*))?'
+    private static final String COMMENT_REGEX = 'build (((?<overrideDefaultConfiguration>just|also)\\s)?on (?<matrix>([A-Za-z0-9_-.]*\\/[A-Za-z0-9_-.]*,?\\s?)*))?(with flags (?<flags>.*))?'
     private def script
 
     /**
