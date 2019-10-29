@@ -108,6 +108,6 @@ node('master') {
         unstash 'logparser-rules'
         step([$class: 'LogParserPublisher',
                 parsingRulesPath: "${pwd()}/rootspi/jenkins/logparser-rules/ROOT-incremental-LogParserRules.txt", 
-                useProjectRule: false, unstableOnWarning: false, failBuildOnError: true])
+                useProjectRule: false, unstableOnWarning: true, failBuildOnError: true])
     }
 }
