@@ -95,11 +95,11 @@ class GitHub implements Serializable {
         def maxMessages = 10
         
         if (!logParserAction)
-            commentBuilder.append("AXEL DEBUG: !logParserAction\n")
+            commentBuilder.append("AXEL DEBUG: NOT logParserAction\n")
         else if (!logParserAction.result)
-            commentBuilder.append("AXEL DEBUG: !logParserAction.result\n")
+            commentBuilder.append("AXEL DEBUG: NOT logParserAction.result\n")
         else
-            commentBuilder.append("AXEL DEBUG: logParserAction errors=%d, warnings=%d\n", logParserAction.result.totalErrors, logParserAction.result.totalWarnings)
+            commentBuilder.append("AXEL DEBUG: logParserAction errors=${logParserAction.result.totalErrors}, warnings=${logParserAction.result.totalWarnings}\n")
 
         if (logParserAction?.result?.totalErrors > 0) {
             commentBuilder.append("### Errors:\n")
