@@ -43,6 +43,7 @@ class BuildConfiguration {
         'noimt',
         'soversion',
         'rtcxxmod',
+        'nortcxxmod',
         'cxxmod',
         'pyroot_experimental',
         'jemalloc',
