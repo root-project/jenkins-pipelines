@@ -14,10 +14,10 @@ class BuildConfiguration {
             'ROOT-centos7',
             'ROOT-centos7-clangHEAD',
             'ROOT-performance-centos7-multicore',
-            'ROOT-fedora27',
             'ROOT-fedora28',
             'ROOT-fedora29',
             'ROOT-fedora30',
+            'ROOT-fedora31',
             'mac1011',
             'mac1012',
             'mac1013',
@@ -57,9 +57,9 @@ class BuildConfiguration {
     static def getPullrequestConfiguration(extraCMakeOptions) {
         return [
             [ label: 'ROOT-performance-centos7-multicore', opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'default' ],
-            [ label: 'ROOT-fedora27',  opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'ROOT-fedora29',  opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'ROOT-fedora30',  opts: extraCMakeOptions, spec: 'cxx14' ],
+            [ label: 'ROOT-fedora31',  opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'ROOT-ubuntu16',  opts: extraCMakeOptions, spec: 'nortcxxmod' ],
             [ label: 'ROOT-ubuntu18.04-i386',  opts: extraCMakeOptions, spec: 'cxx14' ],
             [ label: 'mac1014',   opts: extraCMakeOptions, spec: 'cxx17' ],
