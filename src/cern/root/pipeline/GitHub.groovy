@@ -99,14 +99,10 @@ class GitHub implements Serializable {
             commentBuilder.append("### Errors:\n")
             def ignoredMessages = 0
             def totalMessages = 0
-            script.println "AXEL: in Errors:\n"
 
             logParserAction.result.getErrorLinksReader().withReader {
                 def line = null
-                script.println "AXEL: in withReader:\n"
                 while ((line = it.readLine()) != null) {
-                    script.println "AXEL: got line:\n"
-                    script.println line
                     def start = '<span style="color:red">'
                     def startPos = line.indexOf(start) + start.length()
                     def endPos = line.indexOf('</span></a></li><br/>')
