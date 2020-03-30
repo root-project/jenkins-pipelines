@@ -105,7 +105,7 @@ class GitHub implements Serializable {
                 while ((line = it.readLine()) != null) {
                     def start = '<span class="error" style="color: red">'
                     def startPos = line.indexOf(start) + start.length()
-                    def endPos = line.indexOf('</span></a></li><br/>')
+                    def endPos = line.indexOf('</span></a></li>')
 
                     if (endPos > startPos) {
                         def msg = line.substring(startPos, endPos)
@@ -135,7 +135,7 @@ class GitHub implements Serializable {
                 while ((line = it.readLine()) != null) {
                     def start = '<span class="warning" style="color: orange">'
                     def startPos = line.indexOf(start) + start.length()
-                    def endPos = line.indexOf('</span></a></li><br/>')
+                    def endPos = line.indexOf('</span></a></li>')
 
                     if (endPos > startPos) {
                         def msg = line.substring(startPos, endPos)
