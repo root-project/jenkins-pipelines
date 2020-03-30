@@ -103,7 +103,7 @@ class GitHub implements Serializable {
             logParserAction.result.getErrorLinksReader().withReader {
                 def line = null
                 while ((line = it.readLine()) != null) {
-                    def start = '<span style="color:red">'
+                    def start = '<span class="error" style="color: red">'
                     def startPos = line.indexOf(start) + start.length()
                     def endPos = line.indexOf('</span></a></li><br/>')
 
@@ -133,7 +133,7 @@ class GitHub implements Serializable {
             logParserAction.result.getWarningLinksReader().withReader {
                 def line = null
                 while ((line = it.readLine()) != null) {
-                    def start = '<span style="color:orange">'
+                    def start = '<span class="warning" style="color: orange">'
                     def startPos = line.indexOf(start) + start.length()
                     def endPos = line.indexOf('</span></a></li><br/>')
 
