@@ -87,9 +87,11 @@ class GitHub implements Serializable {
         def commentBuilder = new StringBuilder()
         def buildUrl = Jenkins.activeInstance.rootUrl + buildWrapper.result.rawBuild.url
         def today = new Date().format("yyyy-MM-dd");
+        def label = buildWrapper.label;
+        def spec = buildWrapper.spec;
 
-        commentBuilder.append("Build failed on ${buildWrapper.label}/${buildWrapper.spec}.\n")
-        commentBuilder.append("[See cdash ](http://cdash.cern.ch/index.php?project=ROOT&filtercount=1&field1=buildname/string&compare1=65&value1=PR-${prId}-$LABEL-$SPEC&date=${today}).\n")
+        commentBuilder.append("Build failed on ${label}/${spec}.\n")
+        commentBuilder.append("[See cdash ](http://cdash.cern.ch/index.php?project=ROOT&filtercount=1&field1=buildname/string&compare1=65&value1=PR-${prId}-${label}-${spec}&date=${today}).\n")
         commentBuilder.append("[See console output](${buildUrl}console).\n")
         
         def logParserAction = buildWrapper.result.rawBuild.getAction(LogParserAction.class)
