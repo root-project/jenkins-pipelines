@@ -90,7 +90,7 @@ class GitHub implements Serializable {
         def label = buildWrapper.label;
         def spec = buildWrapper.spec;
 
-        def nodeName = "${env.NODE_NAME}"
+        def nodeName = "${NODE_NAME}"
         commentBuilder.append("AXEL DEBUG: Node name is $nodeName\n")
 
         commentBuilder.append("Build failed on ${label}/${spec}.\n")
