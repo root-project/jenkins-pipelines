@@ -4,7 +4,6 @@ import hudson.plugins.logparser.LogParserAction
 import hudson.tasks.junit.TestResultAction
 import jenkins.model.Jenkins
 import org.jenkinsci.plugins.ghprb.GhprbTrigger
-import org.jenkinsci.plugins.workflow.actions.WorkspaceAction
 import org.kohsuke.github.GHCommitState
 
 /**
@@ -91,11 +90,8 @@ class GitHub implements Serializable {
         def label = buildWrapper.label;
         def spec = buildWrapper.spec;
 
-        def workspaceAction = buildWrapper.result.rawBuild.getAction(WorkspaceAction.class)
-	if (workspaceAction != null) {
-           def nodeName = workspaceAction.getNode()
-           commentBuilder.append("AXEL DEBUG: Node name is $nodeName\n")
-	}
+        def nodeName = buildWrapper.result.rawBuild.getEnvironment()['NODE_NAME']
+        commentBuilder.append("AXEL DEBUG: Node name is $nodeName\n")
 
         commentBuilder.append("Build failed on ${label}/${spec}.\n")
         commentBuilder.append("[See cdash ](http://cdash.cern.ch/index.php?project=ROOT&filtercount=1&field1=buildname/string&compare1=65&value1=PR-${prId}-${label}-${spec}&date=${today}).\n")
