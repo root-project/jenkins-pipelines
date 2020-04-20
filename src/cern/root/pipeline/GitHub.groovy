@@ -90,6 +90,12 @@ class GitHub implements Serializable {
         def label = buildWrapper.label;
         def spec = buildWrapper.spec;
 
+        def workspaceAction = buildWrapper.result.rawBuild.getAction(WorkspaceAction.class)
+	if (workspaceAction != null) {
+           String nodeName = workspaceAction.getNode();
+           script.println "AXEL: Node name is $nodeName"
+	}
+
         commentBuilder.append("Build failed on ${label}/${spec}.\n")
         commentBuilder.append("[See cdash ](http://cdash.cern.ch/index.php?project=ROOT&filtercount=1&field1=buildname/string&compare1=65&value1=PR-${prId}-${label}-${spec}&date=${today}).\n")
         commentBuilder.append("[See console output](${buildUrl}console).\n")
