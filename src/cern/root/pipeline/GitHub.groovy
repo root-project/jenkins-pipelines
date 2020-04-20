@@ -90,14 +90,15 @@ class GitHub implements Serializable {
         def label = buildWrapper.label;
         def spec = buildWrapper.spec;
 
-        def nodeName = "${NODE_NAME}"
+        def logParserAction = buildWrapper.result.rawBuild.getAction(LogParserAction.class)
+
+        def nodeName = logParserAction.getNode();
         commentBuilder.append("AXEL DEBUG: Node name is $nodeName\n")
 
         commentBuilder.append("Build failed on ${label}/${spec}.\n")
         commentBuilder.append("[See cdash ](http://cdash.cern.ch/index.php?project=ROOT&filtercount=1&field1=buildname/string&compare1=65&value1=PR-${prId}-${label}-${spec}&date=${today}).\n")
         commentBuilder.append("[See console output](${buildUrl}console).\n")
         
-        def logParserAction = buildWrapper.result.rawBuild.getAction(LogParserAction.class)
         def testResultAction = buildWrapper.result.rawBuild.getAction(TestResultAction.class)
 
         def maxMessages = 10
