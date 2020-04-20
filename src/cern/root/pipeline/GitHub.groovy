@@ -92,8 +92,8 @@ class GitHub implements Serializable {
 
         def workspaceAction = buildWrapper.result.rawBuild.getAction(WorkspaceAction.class)
 	if (workspaceAction != null) {
-           String nodeName = workspaceAction.getNode();
-           script.println "AXEL: Node name is $nodeName"
+           def nodeName = workspaceAction.getNode()
+           script.println "AXEL: Node name is $nodeName\n"
 	}
 
         commentBuilder.append("Build failed on ${label}/${spec}.\n")
