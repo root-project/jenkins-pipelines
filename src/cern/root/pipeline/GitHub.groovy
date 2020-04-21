@@ -5,6 +5,13 @@ import hudson.tasks.junit.TestResultAction
 import jenkins.model.Jenkins
 import org.jenkinsci.plugins.ghprb.GhprbTrigger
 import org.jenkinsci.plugins.workflow.actions.WorkspaceAction
+import org.jenkinsci.plugins.workflow.job.WorkflowRun
+import org.jenkinsci.plugins.workflow.flow.FlowExecution;
+import org.jenkinsci.plugins.workflow.graph.FlowGraphWalker;
+import org.jenkinsci.plugins.workflow.graph.FlowNode;
+import org.jenkinsci.plugins.workflow.graph.StepStartNode;
+import org.jenkinsci.plugins.workflow.cps.nodes.StepStartNode;
+import org.jenkinsci.plugins.workflow.actions.WorkspaceAction
 import org.kohsuke.github.GHCommitState
 
 /**
