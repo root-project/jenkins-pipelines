@@ -4,6 +4,7 @@ import hudson.plugins.logparser.LogParserAction
 import hudson.tasks.junit.TestResultAction
 import jenkins.model.Jenkins
 import org.jenkinsci.plugins.ghprb.GhprbTrigger
+import org.jenkinsci.plugins.workflow.actions.WorkspaceAction
 import org.kohsuke.github.GHCommitState
 
 /**
