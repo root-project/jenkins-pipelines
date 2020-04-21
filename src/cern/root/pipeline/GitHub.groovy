@@ -98,29 +98,29 @@ class GitHub implements Serializable {
         def label = buildWrapper.label;
         def spec = buildWrapper.spec;
 
-        def exec = buildWrapper.result.rawBuild.getExecution();
+        commentBuilder.append("Build failed on ${label}/${spec}.\n")
+
+        def exec = buildWrapper.result.rawBuild.getExecution()
         if (exec == null) {
-            commentBuilder.append("AXEL DEBUG: no execution");
+            commentBuilder.append("AXEL DEBUG: no execution")
         } else {
-            FlowGraphWalker w = new FlowGraphWalker(exec);
+            FlowGraphWalker w = new FlowGraphWalker(exec)
             for (FlowNode n : w) {
                 if (n instanceof StepStartNode) {
-                    commentBuilder.append("AXEL DEBUG: got a stepstartnode");
-                    def wsAction = n.getAction(WorkspaceAction);
+                    def wsAction = n.getAction(WorkspaceAction)
                     if (wsAction) {
-                        commentBuilder.append("AXEL DEBUG: got an action");
-                        def workspace = wsAction.getWorkspace();
+                        def workspace = wsAction.getWorkspace()
                         if (workspace != null) {
-                            commentBuilder.append("AXEL DEBUG: got a workspace\n")
                             def computer = workspace.toComputer().getHostName()
-                            commentBuilder.append("AXEL DEBUG: got a computer: $computer\n")
+                            def path = workspace.getRemote()
+                            commentBuilder.append("Running on ${computer}:\n")
+                            break
                         }
                     }
                 }
             }
         }
 
-        commentBuilder.append("Build failed on ${label}/${spec}.\n")
         commentBuilder.append("[See cdash ](http://cdash.cern.ch/index.php?project=ROOT&filtercount=1&field1=buildname/string&compare1=65&value1=PR-${prId}-${label}-${spec}&date=${today}).\n")
         commentBuilder.append("[See console output](${buildUrl}console).\n")
         
