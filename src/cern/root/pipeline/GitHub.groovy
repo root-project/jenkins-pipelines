@@ -101,9 +101,7 @@ class GitHub implements Serializable {
         commentBuilder.append("Build failed on ${label}/${spec}.\n")
 
         def exec = buildWrapper.result.rawBuild.getExecution()
-        if (exec == null) {
-            commentBuilder.append("AXEL DEBUG: no execution")
-        } else {
+        if (exec != null) {
             FlowGraphWalker w = new FlowGraphWalker(exec)
             for (FlowNode n : w) {
                 if (n instanceof StepStartNode) {
@@ -112,8 +110,8 @@ class GitHub implements Serializable {
                         def workspace = wsAction.getWorkspace()
                         if (workspace != null) {
                             def computer = workspace.toComputer().getHostName()
-                            def path = workspace.getRemote()
-                            commentBuilder.append("Running on ${computer}:\n")
+                            def wspath = workspace.getRemote()
+                            commentBuilder.append("Running on ${computer}:${wspath}\n")
                             break
                         }
                     }
