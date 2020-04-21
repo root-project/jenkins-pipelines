@@ -106,7 +106,7 @@ class GitHub implements Serializable {
             for (FlowNode n : w) {
                 if (n instanceof StepStartNode) {
                     commentBuilder.append("AXEL DEBUG: got a stepstartnode");
-                    wsAction = n.getAction(WorkspaceAction);
+                    def wsAction = n.getAction(WorkspaceAction);
                     if (wsAction) {
                         commentBuilder.append("AXEL DEBUG: got an action");
                         def workspace = wsAction.getWorkspace();
