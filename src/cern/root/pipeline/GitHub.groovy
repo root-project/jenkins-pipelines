@@ -109,10 +109,11 @@ class GitHub implements Serializable {
                     if (wsAction) {
                         def workspace = wsAction.getWorkspace()
                         if (workspace != null) {
+                            def nodeName = workspace.getNode()
                             def computer = workspace.toComputer().getHostName()
                             def wspath = workspace.getRemote()
-                            commentBuilder.append("Running on ${computer}:${wspath}\n")
-                            break
+                            commentBuilder.append("Running ${nodeName} on ${computer}:${wspath}\n")
+                            /*break*/
                         }
                     }
                 }
