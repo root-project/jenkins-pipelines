@@ -103,17 +103,21 @@ class GitHub implements Serializable {
         def exec = buildWrapper.result.rawBuild.getExecution()
         if (exec != null) {
             FlowGraphWalker w = new FlowGraphWalker(exec)
+            def skippedWorspaces = 0;
             for (FlowNode n : w) {
                 if (n instanceof StepStartNode) {
                     def wsAction = n.getAction(WorkspaceAction)
                     if (wsAction) {
                         def workspace = wsAction.getWorkspace()
                         if (workspace != null) {
-                            def nodeName = n.getStepName()
+                            if (skippedWorspaces == 0) {
+                               skippedWorspaces = 1
+                               continue
+                            }
                             def computer = workspace.toComputer().getHostName()
                             def wspath = workspace.getRemote()
-                            commentBuilder.append("Running ${nodeName} on ${computer}:${wspath}\n")
-                            /*break*/
+                            commentBuilder.append("Running on ${computer}:${wspath}\n")
+                            break
                         }
                     }
                 }
