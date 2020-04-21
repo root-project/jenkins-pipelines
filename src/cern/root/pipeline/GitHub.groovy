@@ -92,7 +92,7 @@ class GitHub implements Serializable {
 
 	def wsAction = buildWrapper.result.rawBuild.getAction(WorkspaceAction);
 	if (wsAction != null) {
-           commentBuilder.append("AXEL DEBUG: got a wsaction
+           commentBuilder.append("AXEL DEBUG: got a wsaction");
            def workspace = wsAction.getWorkspace();
            if (workspace != null) {
               commentBuilder.append("AXEL DEBUG: got a workspace\n")
