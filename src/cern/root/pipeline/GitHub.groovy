@@ -90,13 +90,15 @@ class GitHub implements Serializable {
         def label = buildWrapper.label;
         def spec = buildWrapper.spec;
 
-        def logParserAction = buildWrapper.result.rawBuild.getAction(LogParserAction.class)
-
-        def workspace = buildWrapper.result.rawBuild.getWorkspace();
-        if (workspace != null) {
-           commentBuilder.append("AXEL DEBUG: got a workspace\n")
-           def computer = workspace.toComputer().getHostName()
-           commentBuilder.append("AXEL DEBUG: got a computer: $computer\n")
+	def wsAction = buildWrapper.result.rawBuild.getAction(WorkspaceAction);
+	if (wsAction != null) {
+           commentBuilder.append("AXEL DEBUG: got a wsaction
+           def workspace = wsAction.getWorkspace();
+           if (workspace != null) {
+              commentBuilder.append("AXEL DEBUG: got a workspace\n")
+              def computer = workspace.toComputer().getHostName()
+              commentBuilder.append("AXEL DEBUG: got a computer: $computer\n")
+           }
         } else
            commentBuilder.append("AXEL DEBUG: null workspace\n")
 
@@ -104,6 +106,7 @@ class GitHub implements Serializable {
         commentBuilder.append("[See cdash ](http://cdash.cern.ch/index.php?project=ROOT&filtercount=1&field1=buildname/string&compare1=65&value1=PR-${prId}-${label}-${spec}&date=${today}).\n")
         commentBuilder.append("[See console output](${buildUrl}console).\n")
         
+        def logParserAction = buildWrapper.result.rawBuild.getAction(LogParserAction.class)
         def testResultAction = buildWrapper.result.rawBuild.getAction(TestResultAction.class)
 
         def maxMessages = 10
