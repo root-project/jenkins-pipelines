@@ -62,10 +62,10 @@ class BuildConfiguration {
         return [
             [ label: 'ROOT-debian10-i386',  opts: extraCMakeOptions, spec: 'cxx14' ],
             [ label: 'ROOT-performance-centos7-multicore', opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'default' ],
-            [ label: 'ROOT-fedora29',  opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'ROOT-fedora30',  opts: extraCMakeOptions, spec: 'cxx14' ],
             [ label: 'ROOT-fedora31',  opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'ROOT-ubuntu16',  opts: extraCMakeOptions, spec: 'nortcxxmod' ],
+            [ label: 'mac1014',   opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'mac1015',   opts: extraCMakeOptions, spec: 'cxx17' ],
             [ label: 'windows10', opts: extraCMakeOptions, spec: 'cxx14' ]
         ]
