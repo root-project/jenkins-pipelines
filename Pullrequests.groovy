@@ -26,7 +26,7 @@ properties([
 timestamps {
     GitHub gitHub = new GitHub(this, PARENT, ghprbGhRepository, ghprbPullId, params.ghprbActualCommit)
     BotParser parser = new BotParser(this, params.ExtraCMakeOptions)
-    GenericBuild build = new GenericBuild(this, "root-pullrequests-build-$ghprbPullAuthorLogin-$ghprbPullId", params.MODE)
+    GenericBuild build = new GenericBuild(this, 'root-pullrequests-build', params.MODE)
 
     build.addBuildParameter('ROOT_REFSPEC', "+refs/pull/${ghprbPullId}/head:refs/remotes/origin/pr/${ghprbPullId}/head +refs/heads/${params.ghprbTargetBranch}:refs/remotes/origin/${params.ghprbTargetBranch}")
     build.addBuildParameter('ROOT_BRANCH', "${params.ghprbTargetBranch}")
