@@ -22,7 +22,11 @@ env.GIT_URL = 'http://root.cern/git/root.git'
 currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL/$SPEC $BUILD_NOTE")
 currentBuild.setDescription("$BUILD_DESCRIPTION")
 
+def shouldKeepBuilds = params.ExtraCMakeOptions.toLowerCase().contains("dkeep_pr_builds_for_a_day=on")
+def customWS = "${env.BUILD_URL}" + File.separator +  (shouldKeepBuilds) ? "PR-$ghprbPullId-keep-for-$ghprbPullAuthorLogin": "PR"
+
 node(LABEL) {
+    ws("$customWS") {
     timestamps {
         stage('Checkout') {
             dir('root') {
@@ -99,8 +103,9 @@ node(LABEL) {
             //archiveArtifacts artifacts: 'build/'
         //}
         stash includes: 'rootspi/jenkins/logparser-rules/*', name: 'logparser-rules'
-    }
-}
+    } // timestamps
+} // ws
+} // node
 
 // Log-parser-plugin will look for rules on master node. Unstash the rules and parse the rules. (JENKINS-38840)
 node('master') {
