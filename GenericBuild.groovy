@@ -22,11 +22,7 @@ env.GIT_URL = 'http://root.cern/git/root.git'
 currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL/$SPEC $BUILD_NOTE")
 currentBuild.setDescription("$BUILD_DESCRIPTION")
 
-def shouldKeepBuilds = params.ExtraCMakeOptions.toLowerCase().contains("dkeep_pr_builds_for_a_day=on")
-def customWS = (shouldKeepBuilds ? "PR-$ghprbPullId-keep-for-$ghprbPullAuthorLogin": "PR")
-
 node(LABEL) {
-    customWorkspace "$customWS"
     timestamps {
         stage('Checkout') {
             dir('root') {
