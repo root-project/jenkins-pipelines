@@ -26,7 +26,7 @@ properties([
 timestamps {
     GitHub gitHub = new GitHub(this, PARENT, ghprbGhRepository, ghprbPullId, params.ghprbActualCommit)
     BotParser parser = new BotParser(this, params.ExtraCMakeOptions)
-    GenericBuild build = new GenericBuild(this, "root-pullrequests-build" , params.MODE)
+    GenericBuild build = new GenericBuild(this, 'root-pullrequests-build', params.MODE)
 
     build.addBuildParameter('ROOT_REFSPEC', "+refs/pull/${ghprbPullId}/head:refs/remotes/origin/pr/${ghprbPullId}/head +refs/heads/${params.ghprbTargetBranch}:refs/remotes/origin/${params.ghprbTargetBranch}")
     build.addBuildParameter('ROOT_BRANCH', "${params.ghprbTargetBranch}")
@@ -42,24 +42,6 @@ timestamps {
         if (buildWrapper.result.result != 'SUCCESS' && currentBuild.result != 'ABORTED') {
             gitHub.postResultComment(buildWrapper)
         }
-
-        if ("$MODE" == "pullrequests") {
-            // Clean up all PRs which had no activity for a day
-            def today = new Date()
-            def isOld = {file -> today - new Date(file.lastModified()) > 1 /*day*/}
-            def WS = new File(".", "..")
-            println buildWrapper
-            println subdir
-            println WS
-            println WS.listFiles()
-            println "Folders older than 1 day:"
-            filesToClean = WS.listFiles().toList().findAll{it.getName().contains("root-pullrequests-build-PR-")}.each{
-                File controlFile = new File(it, "controlfile")
-                assert controlFile.exists() : "file not found"
-            }.findAll(isOld)
-            println filesToClean
-        }
-
     })
 
     if (parser.isParsableComment(ghprbCommentBody.trim())) {
