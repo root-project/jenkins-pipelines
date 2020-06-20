@@ -17,14 +17,25 @@ for (ParameterValue p in params) {
     env[p.key] = p.value
 }
 
+println params
+
 env.GIT_URL = 'http://root.cern/git/root.git'
 
 currentBuild.setDisplayName("#$BUILD_NUMBER $LABEL/$SPEC $BUILD_NOTE")
 currentBuild.setDescription("$BUILD_DESCRIPTION")
 
+def subdir = '.'
+if ("$MODE" == "pullrequests") {
+    subdir = "PR"
+    if (ExtraCMakeOptions.toLowerCase().contains("dkeep_pr_builds_for_a_day=on")) {
+        subdir = "PR-${params.ghprbPullId}-${params.ghprbPullAuthorLogin}"
+    }
+}
 node(LABEL) {
     timestamps {
         stage('Checkout') {
+            dir ("$subdir") {
+            // Needed by the cleanup step
             dir('root') {
                 retry(3) {
                     // TODO: Use the git step when it has implemented specifying refspecs
@@ -52,6 +63,7 @@ node(LABEL) {
                     git url: 'http://root.cern/git/rootspi.git'
                 }
             }
+            } // subdir
         }
 
         try {
