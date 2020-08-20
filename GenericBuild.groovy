@@ -58,34 +58,36 @@ node(LABEL) {
             stage('Build') {
               timeout(time: 240, unit: 'MINUTES') {
                 if (LABEL == 'windows10') {
-                    bat 'rootspi/jenkins/jk-all.bat'
+                    bat 'rootspi/jenkins/jk-all.bat build'
                 } else {
                     sh 'rootspi/jenkins/jk-all build'
                 }
               }
             }
 
-            if (LABEL != 'windows10') {
-                stage('Test') {
-                  timeout(time: 240, unit: 'MINUTES') {
+            stage('Test') {
+              timeout(time: 240, unit: 'MINUTES') {
+                if (LABEL == 'windows10') {
+                    bat 'rootspi/jenkins/jk-all.bat test'
+                } else {
                     sh 'rootspi/jenkins/jk-all test'
-
-                    def testThreshold = [[$class: 'FailedThreshold',
-                            failureNewThreshold: '0', failureThreshold: '0', unstableNewThreshold: '0',
-                            unstableThreshold: '0'], [$class: 'SkippedThreshold', failureNewThreshold: '',
-                            failureThreshold: '', unstableNewThreshold: '', unstableThreshold: '']]
-
-                    step([$class: 'XUnitBuilder',
-                            testTimeMargin: '3000', thresholdMode: 1, thresholds: testThreshold,
-                            tools: [[$class: 'CTestType',
-                                    deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/Testing/*/Test.xml',
-                                    skipNoTestFiles: false, stopProcessingIfError: true]]])
-
-                    if (currentBuild.result == 'FAILURE') {
-                        throw new Exception("Test result caused build to fail")
-                    }
-                  }
                 }
+
+                def testThreshold = [[$class: 'FailedThreshold',
+                        failureNewThreshold: '0', failureThreshold: '0', unstableNewThreshold: '0',
+                        unstableThreshold: '0'], [$class: 'SkippedThreshold', failureNewThreshold: '',
+                        failureThreshold: '', unstableNewThreshold: '', unstableThreshold: '']]
+
+                step([$class: 'XUnitBuilder',
+                        testTimeMargin: '3000', thresholdMode: 1, thresholds: testThreshold,
+                        tools: [[$class: 'CTestType',
+                                deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/Testing/*/Test.xml',
+                                skipNoTestFiles: false, stopProcessingIfError: true]]])
+
+                if (currentBuild.result == 'FAILURE') {
+                    throw new Exception("Test result caused build to fail")
+                }
+              }
             }
         } catch (err) {
             println 'Build failed because:'
