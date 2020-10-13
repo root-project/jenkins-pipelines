@@ -78,11 +78,19 @@ node(LABEL) {
                         unstableThreshold: '0'], [$class: 'SkippedThreshold', failureNewThreshold: '',
                         failureThreshold: '', unstableNewThreshold: '', unstableThreshold: '']]
 
-                step([$class: 'XUnitBuilder',
-                        testTimeMargin: '3000', thresholdMode: 1, thresholds: testThreshold,
-                        tools: [[$class: 'CTestType',
-                                deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/Testing/*/Test.xml',
-                                skipNoTestFiles: false, stopProcessingIfError: true]]])
+                if (LABEL == 'windows10') {
+                    step([$class: 'XUnitBuilder',
+                            testTimeMargin: '3000', thresholdMode: 1, thresholds: testThreshold,
+                            tools: [[$class: 'CTestType',
+                                    deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/Testing/*/Test.xml',
+                                    skipNoTestFiles: true, stopProcessingIfError: true]]])
+                } else {
+                    step([$class: 'XUnitBuilder',
+                            testTimeMargin: '3000', thresholdMode: 1, thresholds: testThreshold,
+                            tools: [[$class: 'CTestType',
+                                    deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/Testing/*/Test.xml',
+                                    skipNoTestFiles: false, stopProcessingIfError: true]]])
+                }
 
                 if (currentBuild.result == 'FAILURE') {
                     throw new Exception("Test result caused build to fail")
