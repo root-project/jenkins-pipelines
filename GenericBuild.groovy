@@ -32,6 +32,7 @@ node(LABEL) {
                     checkout([$class: 'GitSCM', branches: [[name: ROOT_BRANCH]], doGenerateSubmoduleConfigurations: false,
                             extensions: [[$class: 'CloneOption', timeout: 10, noTags: true, shallow: false]]
                                        +[[$class: 'LocalBranch', localBranch: '']],
+                                       +[[$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]],
                             submoduleCfg: [], userRemoteConfigs: [[refspec: ROOT_REFSPEC, url: env.GIT_URL]]])
                 }
             }
@@ -43,6 +44,7 @@ node(LABEL) {
                     checkout([$class: 'GitSCM', branches: [[name: ROOTTEST_BRANCH]], doGenerateSubmoduleConfigurations: false,
                             extensions: [[$class: 'CloneOption', timeout: 10, noTags: true, shallow: false]]
                                        +[[$class: 'LocalBranch', localBranch: '']],
+                                       +[[$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]],
                             submoduleCfg: [], userRemoteConfigs: [[refspec: ROOTTEST_REFSPEC, url: rootTestUrl]]])
                 }
             }
