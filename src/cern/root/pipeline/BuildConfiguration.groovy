@@ -68,7 +68,7 @@ class BuildConfiguration {
             [ label: 'ROOT-fedora32',  opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'ROOT-ubuntu16',  opts: extraCMakeOptions, spec: 'nortcxxmod' ],
             [ label: 'mac1014',   opts: extraCMakeOptions, spec: 'python3' ],
-            [ label: 'mac11.0',   opts: extraCMakeOptions, spec: 'cxx17' ],
+            [ label: 'mac11.0',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx17' ],
             [ label: 'windows10', opts: extraCMakeOptions, spec: 'cxx14' ]
         ]
     }
