@@ -42,7 +42,7 @@ class BuildConfiguration {
     @NonCPS
     static def getAvailableSpecializations() {
         return [
-	'default',
+        'default',
         'cxx14',
         'cxx17',
         'python3',
@@ -65,7 +65,7 @@ class BuildConfiguration {
             [ label: 'ROOT-debian10-i386',  opts: extraCMakeOptions, spec: 'cxx14' ],
             /*[ label: 'ROOT-performance-centos8-multicore', opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'default' ],*/
             [ label: 'ROOT-fedora30',  opts: extraCMakeOptions, spec: 'cxx14' ],
-            [ label: 'ROOT-fedora32',  opts: extraCMakeOptions, spec: 'noimt' ],
+            [ label: 'ROOT-fedora31',  opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'ROOT-ubuntu16',  opts: extraCMakeOptions, spec: 'nortcxxmod' ],
             [ label: 'mac1014',   opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'mac11.0',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx17' ],
