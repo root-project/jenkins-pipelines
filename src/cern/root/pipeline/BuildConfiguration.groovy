@@ -26,6 +26,7 @@ class BuildConfiguration {
             'mac1015',
             'mac10beta',
             'mac11.0',
+            'mac11arm',
             'ROOT-ubuntu14',
             'ROOT-ubuntu16',
             'ROOT-ubuntu18.04',
