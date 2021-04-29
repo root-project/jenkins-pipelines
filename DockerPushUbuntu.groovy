@@ -35,7 +35,7 @@ node('docker-host') {
                             unstableThreshold: '0'], [$class: 'SkippedThreshold', failureNewThreshold: '', 
                             failureThreshold: '', unstableNewThreshold: '', unstableThreshold: '']]
 
-                    step([$class: 'XUnitBuilder', 
+                    step([$class: 'XUnitPublisher', 
                             testTimeMargin: '3000', thresholdMode: 1, thresholds: testThreshold, 
                             tools: [[$class: 'CTestType', 
                                     deleteOutputFiles: true, failIfNotNew: false, pattern: 'root-build/Testing/*/Test.xml', 
