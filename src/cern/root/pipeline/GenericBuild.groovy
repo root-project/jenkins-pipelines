@@ -133,7 +133,8 @@ class GenericBuild implements Serializable {
      * Sends an email report about the current build to a set of participants.
      * The email is generated from the template in resources/jenkins-pipeline-email-html.template.
      */
-    @NonCPS
+    /*@NonCPS -- AXEL: cannot use as this calls `emailext`, see
+    "Use of Pipeline steps from @NonCPS" at Use of Pipeline steps from @NonCPS */
     void sendEmails() {
         def binding = ['build': script.currentBuild.rawBuild, 
                 'rooturl': Jenkins.getActiveInstance().getRootUrl(), 
