@@ -53,7 +53,6 @@ class BuildConfiguration {
         'rtcxxmod',
         'nortcxxmod',
         'cxxmod',
-        'pyroot_experimental',
         'jemalloc',
         'tcmalloc'
         ]
@@ -67,6 +66,7 @@ class BuildConfiguration {
             [ label: 'ROOT-debian10-i386',  opts: extraCMakeOptions, spec: 'cxx14' ],
             [ label: 'ROOT-performance-centos8-multicore', opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'default' ],
             [ label: 'ROOT-ubuntu16',  opts: extraCMakeOptions, spec: 'nortcxxmod' ],
+            [ label: 'ROOT-ubuntu2004',  opts: extraCMakeOptions, spec: 'soversion' ],
             [ label: 'mac1014',   opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'mac11.0',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx17' ],
             [ label: 'windows10', opts: extraCMakeOptions, spec: 'cxx14' ]
