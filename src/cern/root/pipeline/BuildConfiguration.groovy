@@ -23,7 +23,6 @@ class BuildConfiguration {
             'ROOT-fedora32',
             'ROOT-fedora34',
             'mac1013',
-            'mac1014',
             'mac1015',
             'mac10beta',
             'mac11.6',
@@ -67,7 +66,7 @@ class BuildConfiguration {
             [ label: 'ROOT-performance-centos8-multicore', opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'default' ],
             [ label: 'ROOT-ubuntu16',  opts: extraCMakeOptions, spec: 'nortcxxmod' ],
             [ label: 'ROOT-ubuntu2004',  opts: extraCMakeOptions, spec: 'soversion' ],
-            [ label: 'mac1014',   opts: extraCMakeOptions, spec: 'python3' ],
+            [ label: 'mac1015',   opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'mac11.6',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx17' ],
             [ label: 'windows10', opts: extraCMakeOptions, spec: 'cxx14' ]
         ]
