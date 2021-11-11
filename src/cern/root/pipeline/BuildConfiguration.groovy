@@ -22,7 +22,6 @@ class BuildConfiguration {
             'ROOT-fedora31',
             'ROOT-fedora32',
             'ROOT-fedora34',
-            'mac1013',
             'mac1015',
             'mac10beta',
             'mac11.6',
