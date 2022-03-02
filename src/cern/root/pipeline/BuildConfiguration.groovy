@@ -32,6 +32,7 @@ class BuildConfiguration {
             'ROOT-ubuntu18.04-i386',
             'ROOT-ubuntu1904-clang',
             'ROOT-ubuntu2004',
+            'ROOT-ubuntu2004-clang',
             'windows10'
         ]
     }
