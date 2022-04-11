@@ -11,12 +11,9 @@ class BuildConfiguration {
     static def getAvailablePlatforms() {
         return [
             'arm64',
-            'ROOT-centos7',
-            'ROOT-centos7-clangHEAD',
             'ROOT-centos8',
             'ROOT-debian10-i386',
             'ROOT-performance-centos8-multicore',
-            'ROOT-fedora28',
             'ROOT-fedora29',
             'ROOT-fedora30',
             'ROOT-fedora31',
@@ -26,13 +23,15 @@ class BuildConfiguration {
             'mac10beta',
             'mac11',
             'mac11arm',
-            'ROOT-ubuntu14',
+            'mac12',
+            'mac12arm',
             'ROOT-ubuntu16',
             'ROOT-ubuntu18.04',
             'ROOT-ubuntu18.04-i386',
             'ROOT-ubuntu1904-clang',
             'ROOT-ubuntu2004',
             'ROOT-ubuntu2004-clang',
+            'ROOT-ubuntu2204',
             'windows10'
         ]
     }
