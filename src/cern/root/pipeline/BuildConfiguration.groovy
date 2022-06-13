@@ -61,12 +61,12 @@ class BuildConfiguration {
      */
     static def getPullrequestConfiguration(extraCMakeOptions) {
         return [
-            [ label: 'ROOT-debian10-i386',  opts: extraCMakeOptions, spec: 'cxx14' ],
-            [ label: 'ROOT-performance-centos8-multicore', opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'default' ],
+            [ label: 'ROOT-debian10-i386',  opts: extraCMakeOptions, spec: 'soversion' ],
+            [ label: 'ROOT-performance-centos8-multicore', opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx17' ],
             [ label: 'ROOT-ubuntu16',  opts: extraCMakeOptions, spec: 'nortcxxmod' ],
-            [ label: 'ROOT-ubuntu2004',  opts: extraCMakeOptions, spec: 'soversion' ],
-            [ label: 'mac1015',   opts: extraCMakeOptions, spec: 'python3' ],
-            [ label: 'mac11',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx17' ],
+            [ label: 'ROOT-ubuntu2004',  opts: extraCMakeOptions, spec: 'python3' ],
+            [ label: 'mac1015',   opts: extraCMakeOptions, spec: 'cxx17' ],
+            [ label: 'mac11',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx14' ],
             [ label: 'windows10', opts: extraCMakeOptions, spec: 'cxx14' ]
         ]
     }
