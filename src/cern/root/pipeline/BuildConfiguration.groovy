@@ -20,11 +20,13 @@ class BuildConfiguration {
             'ROOT-fedora32',
             'ROOT-fedora34',
             'mac1015',
-            'mac10beta',
             'mac11',
             'mac11arm',
             'mac12',
             'mac12arm',
+            'mac13',
+            'mac13arm',
+            'macbeta',
             'ROOT-ubuntu16',
             'ROOT-ubuntu18.04',
             'ROOT-ubuntu18.04-i386',
@@ -65,7 +67,7 @@ class BuildConfiguration {
             [ label: 'ROOT-performance-centos8-multicore', opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx17' ],
             [ label: 'ROOT-ubuntu18.04',  opts: extraCMakeOptions, spec: 'nortcxxmod' ],
             [ label: 'ROOT-ubuntu2004',  opts: extraCMakeOptions, spec: 'python3' ],
-            [ label: 'mac1015',   opts: extraCMakeOptions, spec: 'cxx17' ],
+            [ label: 'mac12',   opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'mac11',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx14' ],
             [ label: 'windows10', opts: extraCMakeOptions, spec: 'cxx14' ]
         ]
