@@ -62,7 +62,7 @@ class BuildConfiguration {
             [ label: 'ROOT-ubuntu2204',  opts: extraCMakeOptions, spec: 'nortcxxmod' ],
             [ label: 'ROOT-ubuntu2004',  opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'mac11',   opts: extraCMakeOptions, spec: 'noimt' ],
-            [ label: 'mac13arm',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx20' ],
+            [ label: 'mac12arm',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx20' ],
             [ label: 'windows10', opts: extraCMakeOptions, spec: 'cxx14' ]
         ]
     }
