@@ -63,7 +63,7 @@ class BuildConfiguration {
             [ label: 'ROOT-ubuntu2004',  opts: extraCMakeOptions, spec: 'python3' ],
             [ label: 'mac11',   opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'mac12arm',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx20' ],
-            [ label: 'windows10', opts: extraCMakeOptions, spec: 'cxx14' ]
+            [ label: 'windows10', opts: extraCMakeOptions, spec: 'default']
         ]
     }
 
