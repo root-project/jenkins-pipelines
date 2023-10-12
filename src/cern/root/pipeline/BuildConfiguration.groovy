@@ -14,11 +14,6 @@ class BuildConfiguration {
             'ROOT-centos8',
             'ROOT-debian10-i386',
             'ROOT-performance-centos8-multicore',
-            'ROOT-fedora34',
-            'ROOT-fedora36',
-            'mac1015',
-            'mac11',
-            'mac11arm',
             'mac12',
             'mac12arm',
             'mac13',
@@ -38,7 +33,6 @@ class BuildConfiguration {
     static def getAvailableSpecializations() {
         return [
         'default',
-        'cxx14',
         'cxx17',
         'cxx20',
         'python3',
@@ -47,8 +41,6 @@ class BuildConfiguration {
         'rtcxxmod',
         'nortcxxmod',
         'cxxmod',
-        'jemalloc',
-        'tcmalloc'
         ]
     }
 
@@ -60,7 +52,6 @@ class BuildConfiguration {
             [ label: 'ROOT-performance-centos8-multicore', opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'soversion' ],
             [ label: 'ROOT-ubuntu2204',  opts: extraCMakeOptions, spec: 'nortcxxmod' ],
             [ label: 'ROOT-ubuntu2004',  opts: extraCMakeOptions, spec: 'python3' ],
-            [ label: 'mac11',   opts: extraCMakeOptions, spec: 'noimt' ],
             [ label: 'mac12arm',   opts: extraCMakeOptions + ' -DCTEST_TEST_EXCLUDE_NONE=On', spec: 'cxx20' ],
             [ label: 'windows10', opts: extraCMakeOptions, spec: 'default']
         ]
